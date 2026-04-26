@@ -6,6 +6,12 @@ plugins {
 version = providers.gradleProperty("mod_version").get()
 group = providers.gradleProperty("maven_group").get()
 
+loom {
+    runs {
+        runConfigs.remove(runConfigs["server"])
+    }
+}
+
 repositories {
     mavenCentral()
     mavenLocal()

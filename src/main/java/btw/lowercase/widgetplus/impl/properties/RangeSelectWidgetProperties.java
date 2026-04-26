@@ -6,7 +6,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.util.ExtraCodecs;
 
 public class RangeSelectWidgetProperties {
-    public static final ExtraCodecs.LateBoundIdMapper<Identifier, MapCodec<? extends RangeSelectWidgetProperty>> ID_MAPPER = new ExtraCodecs.LateBoundIdMapper<>();
+    private static final ExtraCodecs.LateBoundIdMapper<Identifier, MapCodec<? extends RangeSelectWidgetProperty>> ID_MAPPER = new ExtraCodecs.LateBoundIdMapper<>();
     public static final MapCodec<RangeSelectWidgetProperty> MAP_CODEC = ID_MAPPER
             .codec(Identifier.CODEC)
             .dispatchMap("property", RangeSelectWidgetProperty::type, c -> c);

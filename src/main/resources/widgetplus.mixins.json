@@ -5,6 +5,7 @@
 	"client": [
 		"MixinAbstractButton",
 		"MixinAbstractSliderButton",
+		"MixinClientBootstrap",
 		"MixinFramerateLimitTracker_UncapUIFPS"
 	],
 	"injectors": {
