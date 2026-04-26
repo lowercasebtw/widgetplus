@@ -3,6 +3,7 @@ package btw.lowercase.widgetplus.impl.management;
 import btw.lowercase.widgetplus.WidgetPlus;
 import btw.lowercase.widgetplus.impl.WidgetDefinition;
 import btw.lowercase.widgetplus.impl.WidgetState;
+import btw.lowercase.widgetplus.impl.states.WidgetEntry;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
@@ -24,11 +25,15 @@ public class WidgetManager {
         // As a def is registered, the order of lookups will be as is in here.
         private final ArrayList<Identifier> identifiersOrder;
 
+        // Baked definitions here
+        private final HashMap<WidgetDefinition, WidgetEntry> bakedEntries;
+
         public WidgetDefinitionCollection(final Identifier type) {
             this.type = type;
             this.hashValueLookup = new HashMap<>();
             this.definitions = new HashMap<>();
             this.identifiersOrder = new ArrayList<>();
+            this.bakedEntries = new HashMap<>();
         }
 
         public void register(final Identifier id, final int hash_value, final WidgetDefinition widgetDefinition) {
@@ -43,6 +48,8 @@ public class WidgetManager {
         // -mineland 2026-04-26
         public void register(final Identifier id, final WidgetDefinition widgetDefinition) {
             this.definitions.put(id, widgetDefinition);
+            this.bakedEntries.put(widgetDefinition, widgetDefinition.widget().bake());
+
             // I dont like this. Maybe a set but i dont know how those work on java
             // -mineland 2026-04-26
             if (!this.identifiersOrder.contains(id)) {
@@ -53,12 +60,12 @@ public class WidgetManager {
         // Returns the definition from either the lookup or the first one it matches.
         // TODO: Make these have properties
         // -mineland 2026-04-26
-        public WidgetDefinition get(final int hash_value) {
+        public WidgetDefinition getDefinition(final int hash_value) {
             // Look over all the hash values first, then the rest of the orders second.
             final ArrayList<Identifier> lookup = new ArrayList<>(hashValueLookup.getOrDefault(hash_value, identifiersOrder));
             lookup.addAll(identifiersOrder);
             for (final Identifier identifier : lookup) {
-                final WidgetDefinition result = get(identifier);
+                final WidgetDefinition result = getDefinition(identifier);
                 if (result != null) {
                     return result;
                 }
@@ -67,7 +74,7 @@ public class WidgetManager {
             return null;
         }
 
-        public WidgetDefinition get(final Identifier id) {
+        public WidgetDefinition getDefinition(final Identifier id) {
             final WidgetDefinition definition = definitions.getOrDefault(id, null);
             // TODO: Do the actual condition checks.
 //            if (definition == null) {
@@ -76,29 +83,58 @@ public class WidgetManager {
             return definition;
         }
 
+        public WidgetEntry get(final Identifier id, final int hash_value) {
+            final WidgetEntry entry = bakedEntries.getOrDefault(id, null);
+            return entry;
+        }
+
+//        public WidgetState getState(@NotNull final AbstractWidget widget, final int hashOffset) {
+//            final ArrayList<Identifier> lookup = new ArrayList<>(hashValueLookup.getOrDefault(widget.hashCode(), identifiersOrder));
+//            lookup.addAll(identifiersOrder);
+//            for (final Identifier identifier : lookup) {
+//                final WidgetDefinition result = get(identifier);
+//                if (result == null) {
+//                    continue;
+//                }
+//
+//                // Should this be cached somewhere? I feel like it should.
+//                var baked = result.widget().bake().resolve(widget);
+//                if (baked == null) {
+//                    continue;
+//                }
+//
+//                return baked;
+//            }
+//
+//            return null;
+//        }
+//
+//
+//        public WidgetState getState(final AbstractWidget widget) {
+//            return this.getState(widget, 0);
+//        }
+
         public WidgetState getState(@NotNull final AbstractWidget widget, final int hashOffset) {
-            final ArrayList<Identifier> lookup = new ArrayList<>(hashValueLookup.getOrDefault(widget.hashCode(), identifiersOrder));
+            final int hash_value = widget.hashCode() + hashOffset;
+            final ArrayList<Identifier> lookup = new ArrayList<>(hashValueLookup.getOrDefault(hash_value, identifiersOrder));
             lookup.addAll(identifiersOrder);
+
             for (final Identifier identifier : lookup) {
-                final WidgetDefinition result = get(identifier);
+                final WidgetDefinition result = getDefinition(identifier);
                 if (result == null) {
                     continue;
                 }
 
                 // Should this be cached somewhere? I feel like it should.
-                var baked = result.widget().bake().resolve(widget);
+                var baked = bakedEntries.getOrDefault(result, null);
                 if (baked == null) {
                     continue;
                 }
 
-                return baked;
+                return baked.resolve(widget);
             }
 
             return null;
-        }
-
-        public WidgetState getState(final AbstractWidget widget) {
-            return this.getState(widget, 0);
         }
     }
 
@@ -143,6 +179,10 @@ public class WidgetManager {
         return this.getState(typeIdentifier(type), widget);
     }
 
+    public WidgetState getState(final WidgetDefinition.Type type, final AbstractWidget widget, int hashOffset) {
+        return this.getState(typeIdentifier(type), widget, hashOffset);
+    }
+
     public Identifier typeIdentifier(final WidgetDefinition.Type type) {
         return WidgetPlus.id(type.getSerializedName());
     }
@@ -160,12 +200,12 @@ public class WidgetManager {
     // TODO: make this have arguments for conditionals
     public WidgetDefinition get(final Identifier type, final int hash_value) {
         final WidgetDefinitionCollection collection = entries.getOrDefault(type, null);
-        return collection != null ? collection.get(hash_value) : null;
+        return collection != null ? collection.getDefinition(hash_value) : null;
     }
 
     public WidgetDefinition get(final Identifier type, final Identifier id) {
         final WidgetDefinitionCollection collection = entries.getOrDefault(type, null);
-        return collection != null ? collection.get(id) : null;
+        return collection != null ? collection.getDefinition(id) : null;
 
     }
 
