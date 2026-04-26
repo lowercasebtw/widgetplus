@@ -1,0 +1,27 @@
+{
+	"schemaVersion": 1,
+	"id": "widgetplus",
+	"version": "${version}",
+	"name": "Widget Plus",
+	"description": "tbd",
+	"authors": [
+		"lowercasebtw"
+	],
+	"license": "GPL-3.0-with-linking-exception",
+	"environment": "client",
+	"entrypoints": {
+		"client": [
+			"btw.lowercase.widgetplus.WidgetPlusClient"
+		],
+		"modmenu": [
+			"btw.lowercase.widgetplus.config.ModMenuIntegration"
+		]
+	},
+	"mixins": [
+		"widgetplus.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.19.2",
+		"minecraft": "~26.1.2"
+	}
+}

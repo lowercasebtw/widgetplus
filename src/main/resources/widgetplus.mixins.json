@@ -1,0 +1,16 @@
+{
+	"required": true,
+	"package": "btw.lowercase.widgetplus.mixin",
+	"compatibilityLevel": "JAVA_25",
+	"client": [
+		"MixinAbstractButton",
+		"MixinAbstractSliderButton",
+		"MixinFramerateLimitTracker_UncapUIFPS"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	},
+	"overwrites": {
+		"requireAnnotations": true
+	}
+}
