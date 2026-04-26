@@ -133,8 +133,12 @@ public class WidgetManager {
         return this.getState(type, widget, 0);
     }
 
+    public WidgetState getState(final WidgetDefinition.Type type, final AbstractWidget widget, int hashOffset) {
+        return this.getState(typeIdentifier(type), widget, hashOffset);
+    }
+
     public WidgetState getState(final WidgetDefinition.Type type, final AbstractWidget widget) {
-        return this.getState(typeIdentifier(type), widget);
+        return this.getState(type, widget, 0);
     }
 
     public Identifier typeIdentifier(final WidgetDefinition.Type type) {
