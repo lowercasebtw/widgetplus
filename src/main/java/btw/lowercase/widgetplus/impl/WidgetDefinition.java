@@ -4,6 +4,7 @@ import btw.lowercase.widgetplus.impl.states.WidgetEntry;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.util.StringRepresentable;
 
 import java.util.Optional;
 
@@ -13,9 +14,25 @@ public record WidgetDefinition(Target target, WidgetEntry.Unbaked widget) {
             WidgetEntries.CODEC.fieldOf("widget").forGetter(WidgetDefinition::widget)
     ).apply(instance, WidgetDefinition::new));
 
-    public record Target(Optional<Integer> hash) {
+    public record Target(Type type, Optional<Integer> hash) {
         public static final MapCodec<Target> MAP_CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+                Type.CODEC.fieldOf("type").forGetter(Target::type),
                 Codec.INT.optionalFieldOf("hash_code").forGetter(Target::hash)
         ).apply(instance, Target::new));
+    }
+
+    public enum Type implements StringRepresentable {
+        BUTTON,
+        SLIDER,
+        SLIDER_HANDLE,
+        SCROLLBAR,
+        SCROLLBAR_KNOB;
+
+        public static final Codec<Type> CODEC = StringRepresentable.fromEnum(Type::values);
+
+        @Override
+        public String getSerializedName() {
+            return this.name().toLowerCase();
+        }
     }
 }
