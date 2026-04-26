@@ -45,6 +45,15 @@ public class WidgetManager {
         // -mineland 2026-04-26
         public void register(final Identifier id, final WidgetDefinition widgetDefinition) {
             this.definitions.put(id, widgetDefinition);
+            if (widgetDefinition.target().hash().isPresent()) {
+                int hashValue = widgetDefinition.target().hash().get();
+                if (!hashValueLookup.containsKey(hashValue)) {
+                    hashValueLookup.put(hashValue, new ArrayList<>());
+                }
+
+                ArrayList<Identifier> idList = hashValueLookup.get(hashValue);
+                idList.add(id);
+            }
 
             // I dont like this. Maybe a set but i dont know how those work on java
             // -mineland 2026-04-26
