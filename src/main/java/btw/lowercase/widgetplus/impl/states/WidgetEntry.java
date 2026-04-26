@@ -1,13 +1,14 @@
 package btw.lowercase.widgetplus.impl.states;
 
+import btw.lowercase.widgetplus.impl.WidgetState;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.client.gui.components.AbstractWidget;
-import net.minecraft.client.resources.model.ResolvableModel;
+import org.jspecify.annotations.Nullable;
 
 public interface WidgetEntry {
-    void update(final AbstractWidget widget);
+    @Nullable WidgetState resolve(final AbstractWidget widget);
 
-    interface Unbaked extends ResolvableModel {
+    interface Unbaked {
         MapCodec<? extends WidgetEntry.Unbaked> type();
     }
 }

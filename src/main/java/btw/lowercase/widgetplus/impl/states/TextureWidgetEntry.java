@@ -1,6 +1,7 @@
 package btw.lowercase.widgetplus.impl.states;
 
 import btw.lowercase.widgetplus.impl.GuiPipelineOverrides;
+import btw.lowercase.widgetplus.impl.WidgetState;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -8,10 +9,11 @@ import net.minecraft.resources.Identifier;
 
 import java.util.Optional;
 
-public class TexturedWidgetEntry implements WidgetEntry {
+public record TextureWidgetEntry(Identifier texture,
+                                 Optional<GuiPipelineOverrides> pipelineOverrides) implements WidgetEntry {
     @Override
-    public void update(final AbstractWidget widget) {
-        // TODO
+    public WidgetState resolve(final AbstractWidget widget) {
+        return new WidgetState(this.texture, this.pipelineOverrides);
     }
 
     public record Unbaked(Identifier texture,
@@ -25,11 +27,5 @@ public class TexturedWidgetEntry implements WidgetEntry {
         public MapCodec<? extends Unbaked> type() {
             return MAP_CODEC;
         }
-
-        @Override
-        public void resolveDependencies(final Resolver resolver) {
-            resolver.markDependency(this.texture);
-        }
     }
 }
-

@@ -2,7 +2,7 @@ package btw.lowercase.widgetplus.impl;
 
 import btw.lowercase.widgetplus.WidgetPlus;
 import btw.lowercase.widgetplus.impl.states.EmptyWidgetEntry;
-import btw.lowercase.widgetplus.impl.states.TexturedWidgetEntry;
+import btw.lowercase.widgetplus.impl.states.TextureWidgetEntry;
 import btw.lowercase.widgetplus.impl.states.WidgetEntry;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
@@ -15,7 +15,7 @@ public class WidgetEntries {
 
     public static void bootstrap() {
         ID_MAPPER.put(WidgetPlus.id("empty"), EmptyWidgetEntry.Unbaked.MAP_CODEC);
-        ID_MAPPER.put(WidgetPlus.id("texture"), TexturedWidgetEntry.Unbaked.MAP_CODEC);
+        ID_MAPPER.put(WidgetPlus.id("texture"), TextureWidgetEntry.Unbaked.MAP_CODEC);
 
         // TODO: range_dispatch, select, condition, possibly other
     }
