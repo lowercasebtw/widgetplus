@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public record WidgetDefinition(Target target, WidgetEntry.Unbaked widget) {
     public static final Codec<WidgetDefinition> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            Target.MAP_CODEC.forGetter(WidgetDefinition::target),
+            Target.MAP_CODEC.fieldOf("target").forGetter(WidgetDefinition::target),
             WidgetEntries.CODEC.fieldOf("widget").forGetter(WidgetDefinition::widget)
     ).apply(instance, WidgetDefinition::new));
 
