@@ -5,6 +5,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.util.StringRepresentable;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Optional;
 
@@ -26,12 +27,14 @@ public record WidgetDefinition(Target target, WidgetEntry.Unbaked widget) {
         SLIDER,
         SLIDER_HANDLE,
         SCROLLBAR,
-        SCROLLBAR_KNOB;
+        SCROLLBAR_KNOB,
+        EDIT_BOX,
+        CHECKBOX;
 
         public static final Codec<Type> CODEC = StringRepresentable.fromEnum(Type::values);
 
         @Override
-        public String getSerializedName() {
+        public @NonNull String getSerializedName() {
             return this.name().toLowerCase();
         }
     }
