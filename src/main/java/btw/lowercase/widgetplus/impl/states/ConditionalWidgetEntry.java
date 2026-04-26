@@ -13,7 +13,7 @@ public record ConditionalWidgetEntry(WidgetPropertyTest property, WidgetEntry on
                                      WidgetEntry onFalse) implements WidgetEntry {
     @Override
     public WidgetState resolve(final AbstractWidget widget) {
-        return this.property.resolve(widget) ? this.onTrue.resolve(widget) : this.onFalse.resolve(widget);
+        return this.property.get(widget) ? this.onTrue.resolve(widget) : this.onFalse.resolve(widget);
     }
 
     public record Unbaked(ConditionalWidgetProperty property, WidgetEntry.Unbaked onTrue,
@@ -31,12 +31,7 @@ public record ConditionalWidgetEntry(WidgetPropertyTest property, WidgetEntry on
 
         @Override
         public WidgetEntry bake() {
-            return new ConditionalWidgetEntry(this.adaptProperty(this.property), this.onTrue.bake(), this.onFalse.bake());
-        }
-
-        // TODO
-        private WidgetPropertyTest adaptProperty(final ConditionalWidgetProperty property) {
-            return (widget) -> true;
+            return new ConditionalWidgetEntry(this.property::get, this.onTrue.bake(), this.onFalse.bake());
         }
     }
 }
