@@ -1,7 +1,7 @@
 package btw.lowercase.widgetplus;
 
 import btw.lowercase.widgetplus.impl.WidgetDefinition;
-import btw.lowercase.widgetplus.impl.WidgetManager;
+import btw.lowercase.widgetplus.impl.management.WidgetManager;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mojang.serialization.JsonOps;
