@@ -26,13 +26,18 @@ public abstract class MixinAbstractSliderButton extends AbstractWidget.WithInact
     @WrapOperation(method = "extractWidgetRenderState", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;blitSprite(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIIII)V", ordinal = 0))
     private void widgetplus$blitSliderBackground(final GuiGraphicsExtractor instance, final RenderPipeline renderPipeline, final Identifier location, final int x, final int y, final int width, final int height, final int color, final Operation<Void> original) {
         if (WidgetPlusConfig.instance().enabled) {
-            final WidgetEntry entry = WidgetPlus.getWidgetManager().getWidgetEntry(WidgetLocations.SLIDER);
+            final WidgetEntry entry = WidgetPlus.getWidgetManager().getWidgetByHashOrId(this.hashCode(), WidgetLocations.SLIDER);
             final WidgetState state = entry.resolve(this);
             if (state != null) {
-                final RenderPipeline.Builder pipeline = RenderPipeline.builder(RenderPipelines.GUI_TEXTURED_SNIPPET);
-                pipeline.withLocation("pipeline/dynamic_widget_" + this.hashCode());
-                state.pipelineOverrides().ifPresent(overrides -> overrides.apply(pipeline));
-                original.call(instance, pipeline.build(), state.texture(), x, y, width, height, color);
+                RenderPipeline pipeline = renderPipeline;
+                if (state.pipelineOverrides().isPresent()) {
+                    final RenderPipeline.Builder builder = RenderPipeline.builder(RenderPipelines.GUI_TEXTURED_SNIPPET);
+                    builder.withLocation("pipeline/dynamic_slider_background_" + this.hashCode());
+                    state.pipelineOverrides().get().apply(builder);
+                    pipeline = builder.build();
+                }
+
+                original.call(instance, pipeline, state.texture(), x, y, width, height, color);
             } else {
                 return; // Empty
             }
@@ -41,16 +46,22 @@ public abstract class MixinAbstractSliderButton extends AbstractWidget.WithInact
         original.call(instance, renderPipeline, location, x, y, width, height, color);
     }
 
+    // TODO/NOTE: Button for slider has hashCode offset by 3 to not collide with the background rendering ^
     @WrapOperation(method = "extractWidgetRenderState", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;blitSprite(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIIII)V", ordinal = 1))
     private void widgetplus$blitSliderButton(final GuiGraphicsExtractor instance, final RenderPipeline renderPipeline, final Identifier location, final int x, final int y, final int width, final int height, final int color, final Operation<Void> original) {
         if (WidgetPlusConfig.instance().enabled) {
-            final WidgetEntry entry = WidgetPlus.getWidgetManager().getWidgetByHashOrId(this.hashCode(), WidgetLocations.SLIDER_HANDLE);
+            final WidgetEntry entry = WidgetPlus.getWidgetManager().getWidgetByHashOrId(this.hashCode() + 3, WidgetLocations.SLIDER_HANDLE);
             final WidgetState state = entry.resolve(this);
             if (state != null) {
-                final RenderPipeline.Builder pipeline = RenderPipeline.builder(RenderPipelines.GUI_TEXTURED_SNIPPET);
-                pipeline.withLocation("pipeline/dynamic_slider_" + this.hashCode());
-                state.pipelineOverrides().ifPresent(overrides -> overrides.apply(pipeline));
-                original.call(instance, pipeline.build(), state.texture(), x, y, width, height, color);
+                RenderPipeline pipeline = renderPipeline;
+                if (state.pipelineOverrides().isPresent()) {
+                    final RenderPipeline.Builder builder = RenderPipeline.builder(RenderPipelines.GUI_TEXTURED_SNIPPET);
+                    builder.withLocation("pipeline/dynamic_slider_button_" + this.hashCode());
+                    state.pipelineOverrides().get().apply(builder);
+                    pipeline = builder.build();
+                }
+
+                original.call(instance, pipeline, state.texture(), x, y, width, height, color);
             } else {
                 return; // Empty
             }

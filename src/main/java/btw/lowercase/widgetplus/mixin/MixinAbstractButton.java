@@ -29,10 +29,15 @@ public abstract class MixinAbstractButton extends AbstractWidget.WithInactiveMes
             final WidgetEntry entry = WidgetPlus.getWidgetManager().getWidgetByHashOrId(this.hashCode(), WidgetLocations.BUTTON);
             final WidgetState state = entry.resolve(this);
             if (state != null) {
-                final RenderPipeline.Builder pipeline = RenderPipeline.builder(RenderPipelines.GUI_TEXTURED_SNIPPET);
-                pipeline.withLocation("pipeline/dynamic_button_" + this.hashCode());
-                state.pipelineOverrides().ifPresent(overrides -> overrides.apply(pipeline));
-                original.call(instance, pipeline.build(), state.texture(), x, y, width, height, color);
+                RenderPipeline pipeline = renderPipeline;
+                if (state.pipelineOverrides().isPresent()) {
+                    final RenderPipeline.Builder builder = RenderPipeline.builder(RenderPipelines.GUI_TEXTURED_SNIPPET);
+                    builder.withLocation("pipeline/dynamic_button_" + this.hashCode());
+                    state.pipelineOverrides().get().apply(builder);
+                    pipeline = builder.build();
+                }
+
+                original.call(instance, pipeline, state.texture(), x, y, width, height, color);
             } else {
                 return; // Empty
             }
