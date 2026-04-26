@@ -12,13 +12,10 @@ import net.minecraft.resources.Identifier;
 import java.util.Optional;
 
 public record TextureWidgetEntry(Identifier texture,
-                                 Optional<GuiPipelineOverrides> pipelineOverrides) implements WidgetEntry {
+                                 Optional<RenderPipeline> pipeline) implements WidgetEntry {
     @Override
     public WidgetState resolve(final AbstractWidget widget) {
-        final RenderPipeline.Builder builder = RenderPipeline.builder(RenderPipelines.GUI_TEXTURED_SNIPPET);
-        builder.withLocation("pipeline/dynamic_widget_" + texture.getPath());
-        this.pipelineOverrides.ifPresent(overrides -> overrides.apply(builder));
-        return new WidgetState(this.texture, Optional.of(builder.build()));
+        return new WidgetState(this.texture, this.pipeline);
     }
 
     public record Unbaked(Identifier texture,
@@ -35,7 +32,10 @@ public record TextureWidgetEntry(Identifier texture,
 
         @Override
         public WidgetEntry bake() {
-            return new TextureWidgetEntry(this.texture, this.pipelineOverrides);
+            final RenderPipeline.Builder builder = RenderPipeline.builder(RenderPipelines.GUI_TEXTURED_SNIPPET);
+            builder.withLocation("pipeline/dynamic_widget_" + this.texture.hashCode());
+            this.pipelineOverrides.ifPresent(overrides -> overrides.apply(builder));
+            return new TextureWidgetEntry(this.texture, Optional.of(builder.build()));
         }
     }
 }
