@@ -1,10 +1,10 @@
 package btw.lowercase.widgetplus.impl.states;
 
 import btw.lowercase.widgetplus.impl.WidgetEntries;
-import btw.lowercase.widgetplus.impl.properties.WidgetPropertyTest;
 import btw.lowercase.widgetplus.impl.WidgetState;
 import btw.lowercase.widgetplus.impl.properties.ConditionalWidgetProperties;
 import btw.lowercase.widgetplus.impl.property.ConditionalWidgetProperty;
+import btw.lowercase.widgetplus.impl.property.WidgetPropertyTest;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.client.gui.components.AbstractWidget;

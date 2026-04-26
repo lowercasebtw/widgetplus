@@ -70,26 +70,26 @@ public record RangeSelectWidgetEntry(RangeSelectWidgetProperty property, float s
 
         @Override
         public WidgetEntry bake() {
-            float[] thresholds = new float[this.entries.size()];
-            WidgetEntry[] models = new WidgetEntry[this.entries.size()];
+            final float[] thresholds = new float[this.entries.size()];
+            final WidgetEntry[] entries = new WidgetEntry[this.entries.size()];
 
-            List<Entry> mutableEntries = new ArrayList<>(this.entries);
+            final List<Entry> mutableEntries = new ArrayList<>(this.entries);
             mutableEntries.sort(Entry.BY_THRESHOLD);
             for (int i = 0; i < mutableEntries.size(); i++) {
-                Entry entry = mutableEntries.get(i);
+                final Entry entry = mutableEntries.get(i);
                 thresholds[i] = entry.threshold;
-                models[i] = entry.model.bake();
+                entries[i] = entry.widget.bake();
             }
 
-            return new RangeSelectWidgetEntry(this.property, this.scale, thresholds, models, this.fallback.bake());
+            return new RangeSelectWidgetEntry(this.property, this.scale, thresholds, entries, this.fallback.bake());
         }
     }
 
-    public record Entry(float threshold, WidgetEntry.Unbaked model) {
+    public record Entry(float threshold, WidgetEntry.Unbaked widget) {
         public static final Codec<Entry> CODEC = RecordCodecBuilder.create(
                 instance -> instance.group(
                         Codec.FLOAT.fieldOf("threshold").forGetter(Entry::threshold),
-                        WidgetEntries.CODEC.fieldOf("model").forGetter(Entry::model)
+                        WidgetEntries.CODEC.fieldOf("widget").forGetter(Entry::widget)
                 ).apply(instance, Entry::new)
         );
 

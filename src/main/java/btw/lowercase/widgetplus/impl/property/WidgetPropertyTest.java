@@ -1,4 +1,4 @@
-package btw.lowercase.widgetplus.impl.properties;
+package btw.lowercase.widgetplus.impl.property;
 
 import net.minecraft.client.gui.components.AbstractWidget;
 

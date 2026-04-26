@@ -1,6 +1,6 @@
 package btw.lowercase.widgetplus.impl.property;
 
-import btw.lowercase.widgetplus.impl.base.SelectWidget;
+import btw.lowercase.widgetplus.impl.states.SelectWidgetEntry;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
 import com.mojang.serialization.Codec;
@@ -20,22 +20,22 @@ public interface SelectWidgetProperty<T> {
 
     SelectWidgetProperty.Type<? extends SelectWidgetProperty<T>, T> type();
 
-    record Type<P extends SelectWidgetProperty<T>, T>(MapCodec<SelectWidget.UnbakedSwitch<P, T>> switchCodec) {
+    record Type<P extends SelectWidgetProperty<T>, T>(MapCodec<SelectWidgetEntry.UnbakedSwitch<P, T>> switchCodec) {
         public static <P extends SelectWidgetProperty<T>, T> SelectWidgetProperty.Type<P, T> create(final MapCodec<P> propertyMapCodec, final Codec<T> valueCodec) {
-            final MapCodec<SelectWidget.UnbakedSwitch<P, T>> switchCodec = RecordCodecBuilder.mapCodec((i) -> i.group(propertyMapCodec.forGetter(SelectWidget.UnbakedSwitch::property), createCasesFieldCodec(valueCodec).forGetter(SelectWidget.UnbakedSwitch::cases)).apply(i, SelectWidget.UnbakedSwitch::new));
+            final MapCodec<SelectWidgetEntry.UnbakedSwitch<P, T>> switchCodec = RecordCodecBuilder.mapCodec((i) -> i.group(propertyMapCodec.forGetter(SelectWidgetEntry.UnbakedSwitch::property), createCasesFieldCodec(valueCodec).forGetter(SelectWidgetEntry.UnbakedSwitch::cases)).apply(i, SelectWidgetEntry.UnbakedSwitch::new));
             return new SelectWidgetProperty.Type<>(switchCodec);
         }
 
-        public static <T> MapCodec<List<SelectWidget.SwitchCase<T>>> createCasesFieldCodec(final Codec<T> valueCodec) {
-            return SelectWidget.SwitchCase.codec(valueCodec).listOf().validate(SelectWidgetProperty.Type::validateCases).fieldOf("cases");
+        public static <T> MapCodec<List<SelectWidgetEntry.SwitchCase<T>>> createCasesFieldCodec(final Codec<T> valueCodec) {
+            return SelectWidgetEntry.SwitchCase.codec(valueCodec).listOf().validate(SelectWidgetProperty.Type::validateCases).fieldOf("cases");
         }
 
-        private static <T> DataResult<List<SelectWidget.SwitchCase<T>>> validateCases(final List<SelectWidget.SwitchCase<T>> cases) {
+        private static <T> DataResult<List<SelectWidgetEntry.SwitchCase<T>>> validateCases(final List<SelectWidgetEntry.SwitchCase<T>> cases) {
             if (cases.isEmpty()) {
                 return DataResult.error(() -> "Empty case list");
             } else {
                 final Multiset<T> counts = HashMultiset.create();
-                for (final SelectWidget.SwitchCase<T> c : cases) {
+                for (final SelectWidgetEntry.SwitchCase<T> c : cases) {
                     counts.addAll(c.values());
                 }
 
