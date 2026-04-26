@@ -11,7 +11,6 @@ import com.mojang.blaze3d.pipeline.RenderPipeline;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractSliderButton;
 import net.minecraft.client.gui.components.AbstractWidget;
-import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
@@ -29,15 +28,7 @@ public abstract class MixinAbstractSliderButton extends AbstractWidget.WithInact
             final WidgetDefinition entry = WidgetPlus.getWidgetManager().getWidgetByHashOrId(this.hashCode(), WidgetLocations.SLIDER);
             final WidgetState state = entry.widget().bake().resolve(this);
             if (state != null) {
-                RenderPipeline pipeline = renderPipeline;
-                if (state.pipelineOverrides().isPresent()) {
-                    final RenderPipeline.Builder builder = RenderPipeline.builder(RenderPipelines.GUI_TEXTURED_SNIPPET);
-                    builder.withLocation("pipeline/dynamic_slider_background_" + this.hashCode());
-                    state.pipelineOverrides().get().apply(builder);
-                    pipeline = builder.build();
-                }
-
-                original.call(instance, pipeline, state.texture(), x, y, width, height, color);
+                original.call(instance, state.pipeline().orElse(renderPipeline), state.texture(), x, y, width, height, color);
             } else {
                 return; // Empty
             }
@@ -53,15 +44,7 @@ public abstract class MixinAbstractSliderButton extends AbstractWidget.WithInact
             final WidgetDefinition entry = WidgetPlus.getWidgetManager().getWidgetByHashOrId(this.hashCode() + 3, WidgetLocations.SLIDER_HANDLE);
             final WidgetState state = entry.widget().bake().resolve(this);
             if (state != null) {
-                RenderPipeline pipeline = renderPipeline;
-                if (state.pipelineOverrides().isPresent()) {
-                    final RenderPipeline.Builder builder = RenderPipeline.builder(RenderPipelines.GUI_TEXTURED_SNIPPET);
-                    builder.withLocation("pipeline/dynamic_slider_button_" + this.hashCode());
-                    state.pipelineOverrides().get().apply(builder);
-                    pipeline = builder.build();
-                }
-
-                original.call(instance, pipeline, state.texture(), x, y, width, height, color);
+                original.call(instance, state.pipeline().orElse(renderPipeline), state.texture(), x, y, width, height, color);
             } else {
                 return; // Empty
             }

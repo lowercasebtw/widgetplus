@@ -2,9 +2,11 @@ package btw.lowercase.widgetplus.impl.states;
 
 import btw.lowercase.widgetplus.impl.GuiPipelineOverrides;
 import btw.lowercase.widgetplus.impl.WidgetState;
+import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.resources.Identifier;
 
 import java.util.Optional;
@@ -13,7 +15,10 @@ public record TextureWidgetEntry(Identifier texture,
                                  Optional<GuiPipelineOverrides> pipelineOverrides) implements WidgetEntry {
     @Override
     public WidgetState resolve(final AbstractWidget widget) {
-        return new WidgetState(this.texture, this.pipelineOverrides);
+        final RenderPipeline.Builder builder = RenderPipeline.builder(RenderPipelines.GUI_TEXTURED_SNIPPET);
+        builder.withLocation("pipeline/dynamic_widget_" + texture.getPath());
+        this.pipelineOverrides.ifPresent(overrides -> overrides.apply(builder));
+        return new WidgetState(this.texture, Optional.of(builder.build()));
     }
 
     public record Unbaked(Identifier texture,
