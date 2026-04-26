@@ -12,8 +12,8 @@ public abstract class MixinFramerateLimitTracker_UncapUIFPS {
     @WrapOperation(method = "getFramerateLimit", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/platform/FramerateLimitTracker;getThrottleReason()Lcom/mojang/blaze3d/platform/FramerateLimitTracker$FramerateThrottleReason;"))
     private FramerateLimitTracker.FramerateThrottleReason widgetplus$uncapGuiFramerate(final FramerateLimitTracker instance, final Operation<FramerateLimitTracker.FramerateThrottleReason> original) {
         final FramerateLimitTracker.FramerateThrottleReason reason = original.call(instance);
-        if (WidgetPlusConfig.instance().enabled && WidgetPlusConfig.instance().uncapGuiFramerate) {
-            return reason == FramerateLimitTracker.FramerateThrottleReason.OUT_OF_LEVEL_MENU ? FramerateLimitTracker.FramerateThrottleReason.NONE : reason;
+        if (WidgetPlusConfig.instance().enabled && WidgetPlusConfig.instance().uncapGuiFramerate && reason == FramerateLimitTracker.FramerateThrottleReason.OUT_OF_LEVEL_MENU) {
+            return FramerateLimitTracker.FramerateThrottleReason.NONE;
         } else {
             return reason;
         }
