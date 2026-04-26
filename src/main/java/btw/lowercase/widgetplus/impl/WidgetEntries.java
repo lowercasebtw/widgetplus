@@ -1,9 +1,7 @@
 package btw.lowercase.widgetplus.impl;
 
 import btw.lowercase.widgetplus.WidgetPlus;
-import btw.lowercase.widgetplus.impl.states.EmptyWidgetEntry;
-import btw.lowercase.widgetplus.impl.states.TextureWidgetEntry;
-import btw.lowercase.widgetplus.impl.states.WidgetEntry;
+import btw.lowercase.widgetplus.impl.states.*;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.resources.Identifier;
@@ -16,7 +14,8 @@ public class WidgetEntries {
     public static void bootstrap() {
         ID_MAPPER.put(WidgetPlus.id("empty"), EmptyWidgetEntry.Unbaked.MAP_CODEC);
         ID_MAPPER.put(WidgetPlus.id("texture"), TextureWidgetEntry.Unbaked.MAP_CODEC);
-
-        // TODO: range_dispatch, select, condition, possibly other
+        ID_MAPPER.put(WidgetPlus.id("range_dispatch"), RangeSelectWidgetEntry.Unbaked.MAP_CODEC);
+        ID_MAPPER.put(WidgetPlus.id("select"), SelectWidgetEntry.Unbaked.MAP_CODEC);
+        ID_MAPPER.put(WidgetPlus.id("condition"), ConditionalWidgetEntry.Unbaked.MAP_CODEC);
     }
 }

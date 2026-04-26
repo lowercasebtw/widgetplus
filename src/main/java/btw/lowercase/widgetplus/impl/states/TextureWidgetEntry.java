@@ -27,5 +27,10 @@ public record TextureWidgetEntry(Identifier texture,
         public MapCodec<? extends Unbaked> type() {
             return MAP_CODEC;
         }
+
+        @Override
+        public WidgetEntry bake() {
+            return new TextureWidgetEntry(this.texture, this.pipelineOverrides);
+        }
     }
 }

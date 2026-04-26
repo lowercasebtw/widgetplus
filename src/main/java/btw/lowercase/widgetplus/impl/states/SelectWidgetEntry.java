@@ -1,11 +1,13 @@
 package btw.lowercase.widgetplus.impl.states;
 
 import btw.lowercase.widgetplus.impl.WidgetState;
+import btw.lowercase.widgetplus.impl.property.SelectWidgetProperty;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.client.gui.components.AbstractWidget;
 import org.jspecify.annotations.Nullable;
 
-public class EmptyWidgetEntry implements WidgetEntry {
+// TODO
+public record SelectWidgetEntry<T>(SelectWidgetProperty<T> property) implements WidgetEntry {
     @Override
     public @Nullable WidgetState resolve(final AbstractWidget widget) {
         return null;
@@ -21,7 +23,7 @@ public class EmptyWidgetEntry implements WidgetEntry {
 
         @Override
         public WidgetEntry bake() {
-            return new EmptyWidgetEntry();
+            return new SelectWidgetEntry(null);
         }
     }
 }

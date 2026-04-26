@@ -10,5 +10,7 @@ public interface WidgetEntry {
 
     interface Unbaked {
         MapCodec<? extends WidgetEntry.Unbaked> type();
+
+        WidgetEntry bake();
     }
 }
