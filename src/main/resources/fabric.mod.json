@@ -3,9 +3,10 @@
 	"id": "widgetplus",
 	"version": "${version}",
 	"name": "Widget Plus",
-	"description": "tbd",
+	"description": "Contextual based widget texture rendering based off the vanilla items system.",
 	"authors": [
-		"lowercasebtw"
+		"lowercasebtw",
+		"mineland"
 	],
 	"license": "GPL-3.0-with-linking-exception",
 	"environment": "client",
