@@ -18,7 +18,10 @@ public class PlayerStats {
         public float get(final AbstractWidget widget) {
             final Player player = Minecraft.getInstance().player;
             if (player != null) {
-                return this.normalize ? Mth.clamp(player.getHealth() / player.getMaxHealth(), 0.0F, 1.0F) : player.getHealth();
+                final float health = player.getHealth();
+                final float maxHealth = player.getMaxHealth();
+                return this.normalize ? Mth.clamp(health / maxHealth, 0.0F, 1.0F) : Mth.clamp(health, 0.0F, maxHealth);
+
             } else {
                 return 0.0F;
             }
@@ -99,7 +102,9 @@ public class PlayerStats {
         public float get(final AbstractWidget widget) {
             final Player player = Minecraft.getInstance().player;
             if (player != null) {
-                return this.normalize ? Mth.clamp((float) player.getAirSupply() / player.getMaxAirSupply(), 0.0F, 1.0F) : player.getAirSupply();
+                final int airSupply = player.getAirSupply();
+                final int maxAirSupply = player.getMaxAirSupply();
+                return this.normalize ? Mth.clamp((float) airSupply / maxAirSupply, 0.0F, 1.0F) : Mth.clamp(airSupply, 0.0F, maxAirSupply);
             } else {
                 return 0.0F;
             }

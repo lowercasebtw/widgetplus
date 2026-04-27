@@ -36,7 +36,7 @@ public final class Utils {
 
     public static final Codec<ColorTargetState> COLOR_TARGET_STATE_CODEC = RecordCodecBuilder.create(instance -> instance.group(
             BLEND_FUNCTION_CODEC.optionalFieldOf("blend").forGetter(ColorTargetState::blendFunction),
-            Codec.INT.orElse(ColorTargetState.WRITE_ALL).fieldOf("write_mask").forGetter(ColorTargetState::writeMask)
+            Codec.INT.optionalFieldOf("write_mask", ColorTargetState.WRITE_ALL).forGetter(ColorTargetState::writeMask)
     ).apply(instance, ColorTargetState::new));
 
     private static SourceFactor sourceFactorOf(final String name) {
