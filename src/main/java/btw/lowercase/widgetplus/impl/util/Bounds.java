@@ -16,7 +16,7 @@ public record Bounds(boolean absolute, Optional<Integer> x, Optional<Integer> y,
     ).apply(instance, Bounds::new));
 
     public Bounds(int x, int y, int width, int height) {
-        this(true, x, y, width, height);
+        this(true, Optional.of(x), Optional.of(y), Optional.of(width), Optional.of(height));
     }
 
     public int getX(final int x) {
