@@ -29,6 +29,7 @@ public abstract class MixinAbstractButton extends AbstractWidget.WithInactiveMes
             final WidgetState state = WidgetPlus.getWidgetManager().getState(WidgetDefinition.Type.BUTTON, this);
             if (state instanceof WidgetState.Textured(Identifier texture, Optional<RenderPipeline> pipeline)) {
                 original.call(instance, pipeline.orElse(renderPipeline), texture, x, y, width, height, color);
+                return;
             }
 
             if (state instanceof WidgetState.Empty) {
