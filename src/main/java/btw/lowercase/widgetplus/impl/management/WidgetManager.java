@@ -3,7 +3,6 @@ package btw.lowercase.widgetplus.impl.management;
 import btw.lowercase.widgetplus.WidgetPlus;
 import btw.lowercase.widgetplus.impl.WidgetDefinition;
 import btw.lowercase.widgetplus.impl.WidgetState;
-import btw.lowercase.widgetplus.impl.states.DefaultWidgetEntry;
 import btw.lowercase.widgetplus.impl.states.WidgetEntry;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.resources.Identifier;
@@ -63,7 +62,7 @@ public class WidgetManager {
             return collection.getState(widget, hash_offset);
         } else {
             // TODO/NOTE: Return default widget if no widget is found in registry
-            return DefaultWidgetEntry.INSTANCE.resolve(widget);
+            return WidgetState.Default.INSTANCE;
         }
     }
 
