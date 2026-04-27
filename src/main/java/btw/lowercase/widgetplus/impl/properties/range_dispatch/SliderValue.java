@@ -14,7 +14,7 @@ public record SliderValue() implements RangeDispatchWidgetProperty {
         if (widget instanceof AbstractSliderButton abstractSliderButton) {
             return (float) ((AbstractSliderButtonAccessor) abstractSliderButton).widgetplus$getValue();
         } else {
-            return 0;
+            return 0.0F;
         }
     }
 

@@ -2,6 +2,7 @@ package btw.lowercase.widgetplus.impl.properties;
 
 import btw.lowercase.widgetplus.WidgetPlus;
 import btw.lowercase.widgetplus.impl.properties.range_dispatch.SliderValue;
+import btw.lowercase.widgetplus.impl.properties.range_dispatch.WorldClockTime;
 import btw.lowercase.widgetplus.impl.property.RangeDispatchWidgetProperty;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.resources.Identifier;
@@ -15,5 +16,6 @@ public class RangeDispatchWidgetProperties {
 
     public static void bootstrap() {
         ID_MAPPER.put(WidgetPlus.id("slider/value"), SliderValue.MAP_CODEC);
+        ID_MAPPER.put(WidgetPlus.id("world/clock_time"), WorldClockTime.MAP_CODEC);
     }
 }

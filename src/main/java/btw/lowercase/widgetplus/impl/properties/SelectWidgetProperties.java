@@ -1,5 +1,9 @@
 package btw.lowercase.widgetplus.impl.properties;
 
+import btw.lowercase.widgetplus.WidgetPlus;
+import btw.lowercase.widgetplus.impl.properties.select.Dimension;
+import btw.lowercase.widgetplus.impl.properties.select.VanillaGraphicsPreset;
+import btw.lowercase.widgetplus.impl.properties.select.Weather;
 import btw.lowercase.widgetplus.impl.property.SelectWidgetProperty;
 import com.mojang.serialization.Codec;
 import net.minecraft.resources.Identifier;
@@ -10,5 +14,8 @@ public class SelectWidgetProperties {
     public static final Codec<SelectWidgetProperty.Type<?, ?>> CODEC = ID_MAPPER.codec(Identifier.CODEC);
 
     public static void bootstrap() {
+        ID_MAPPER.put(WidgetPlus.id("dimension"), Dimension.TYPE);
+        ID_MAPPER.put(WidgetPlus.id("graphics_preset"), VanillaGraphicsPreset.TYPE);
+        ID_MAPPER.put(WidgetPlus.id("weather"), Weather.TYPE);
     }
 }
