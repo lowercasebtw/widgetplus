@@ -16,7 +16,7 @@ public abstract class MixinRenderPipeline$Builder {
 
     @Inject(method = "withUniform(Ljava/lang/String;Lcom/mojang/blaze3d/shaders/UniformType;)Lcom/mojang/blaze3d/pipeline/RenderPipeline$Builder;", at = @At("HEAD"))
     private void widgetplus$setUniform(final String name, final UniformType type, final CallbackInfoReturnable<RenderPipeline.Builder> cir) {
-        if ("Globals".equals(name)) {
+        if ("DynamicTransforms".equals(name)) {
             this.withUniform("WPData", UniformType.UNIFORM_BUFFER);
         }
     }
