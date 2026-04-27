@@ -3,15 +3,15 @@
 		"type": "button"
 	},
 	"widget": {
-		"type": "widgetplus:condition",
-		"property": "widgetplus:is_key_down",
+		"type": "condition",
+		"property": "is_key_down",
 		"key": "key.keyboard.backspace",
 		"on_true": {
-			"type": "widgetplus:texture",
+			"type": "texture",
 			"texture": "minecraft:widget/button_highlighted"
 		},
 		"on_false": {
-			"type": "widgetplus:texture",
+			"type": "texture",
 			"texture": "minecraft:widget/button"
 		}
 	}

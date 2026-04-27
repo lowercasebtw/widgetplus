@@ -3,14 +3,14 @@
 		"type": "slider"
 	},
 	"widget": {
-		"type": "widgetplus:condition",
-		"property": "widgetplus:hovered",
+		"type": "condition",
+		"property": "hovered_or_focused",
 		"on_true": {
-			"type": "widgetplus:texture",
+			"type": "texture",
 			"texture": "minecraft:widget/slider_highlighted"
 		},
 		"on_false": {
-			"type": "widgetplus:texture",
+			"type": "texture",
 			"texture": "minecraft:widget/slider"
 		}
 	}

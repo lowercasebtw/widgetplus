@@ -1,15 +1,27 @@
 package btw.lowercase.widgetplus.impl.util;
 
+import btw.lowercase.widgetplus.WidgetPlus;
 import com.mojang.blaze3d.pipeline.BlendFunction;
 import com.mojang.blaze3d.pipeline.ColorTargetState;
 import com.mojang.blaze3d.platform.DestFactor;
 import com.mojang.blaze3d.platform.SourceFactor;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.IdentifierException;
+import net.minecraft.resources.Identifier;
 
 import java.util.Optional;
 
 public final class Utils {
+    public static final Codec<Identifier> IDENTIFIER_CODEC = Codec.STRING.comapFlatMap(input -> {
+        try {
+            return DataResult.success(input.contains(":") ? Identifier.parse(input) : WidgetPlus.id(input));
+        } catch (final IdentifierException exception) {
+            return DataResult.error(() -> "Not a valid identifier: " + input + " " + exception.getMessage());
+        }
+    }, Identifier::toString).stable();
+
     public static final Codec<BlendFunction> BLEND_FUNCTION_CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Codec.STRING.fieldOf("src_color").forGetter(blend -> blend.sourceColor().toString()),
             Codec.STRING.fieldOf("dest_color").forGetter(blend -> blend.destColor().toString()),
