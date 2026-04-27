@@ -3,9 +3,12 @@ package btw.lowercase.widgetplus.impl.properties.select;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
+import net.minecraft.world.entity.player.Player;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 public record Message() implements SelectWidgetProperty<Component> {
     public static final SelectWidgetProperty.Type<Message, Component> TYPE = SelectWidgetProperty.Type.create(
@@ -13,7 +16,7 @@ public record Message() implements SelectWidgetProperty<Component> {
     );
 
     @Override
-    public @NonNull Component get(final AbstractWidget widget) {
+    public @NonNull Component get(final AbstractWidget widget, @Nullable final Screen screen, @Nullable final Player player) {
         return widget.getMessage();
     }
 

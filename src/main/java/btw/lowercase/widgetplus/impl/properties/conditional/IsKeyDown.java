@@ -7,6 +7,9 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.world.entity.player.Player;
+import org.jspecify.annotations.Nullable;
 
 public record IsKeyDown(InputConstants.Key key) implements ConditionalWidgetProperty {
     private static final Codec<InputConstants.Key> KEY_CODEC = Codec.STRING.comapFlatMap(key -> {
@@ -22,7 +25,7 @@ public record IsKeyDown(InputConstants.Key key) implements ConditionalWidgetProp
     ).apply(instance, IsKeyDown::new));
 
     @Override
-    public boolean get(final AbstractWidget widget) {
+    public boolean get(final AbstractWidget widget, @Nullable final Screen screen, @Nullable final Player player) {
         return InputConstants.isKeyDown(Minecraft.getInstance().getWindow(), this.key.getValue());
     }
 

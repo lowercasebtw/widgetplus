@@ -6,15 +6,18 @@ import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.player.Player;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Optional;
 
 public record SpriteWidgetEntry(Identifier sprite,
                                 Optional<RenderPipeline> pipeline) implements WidgetEntry {
     @Override
-    public WidgetState resolve(final AbstractWidget widget) {
+    public WidgetState resolve(final AbstractWidget widget, final @Nullable Screen screen, final @Nullable Player player) {
         return new WidgetState.Sprite(this.sprite, this.pipeline);
     }
 

@@ -4,12 +4,15 @@ import btw.lowercase.widgetplus.mixin.components.AbstractSliderButtonAccessor;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.client.gui.components.AbstractSliderButton;
 import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.world.entity.player.Player;
+import org.jspecify.annotations.Nullable;
 
 public record SliderValue() implements RangeDispatchWidgetProperty {
     public static final MapCodec<SliderValue> MAP_CODEC = MapCodec.unit(new SliderValue());
 
     @Override
-    public float get(final AbstractWidget widget) {
+    public float get(final AbstractWidget widget, final @Nullable Screen screen, final @Nullable Player player) {
         if (widget instanceof AbstractSliderButton abstractSliderButton) {
             return (float) ((AbstractSliderButtonAccessor) abstractSliderButton).widgetplus$getValue();
         } else {

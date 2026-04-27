@@ -8,6 +8,8 @@ import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.world.entity.player.Player;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
@@ -15,7 +17,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public interface SelectWidgetProperty<T> {
-    @Nullable T get(final AbstractWidget widget);
+    @Nullable T get(final AbstractWidget widget, @Nullable final Screen screen, @Nullable final Player player);
 
     Codec<T> valueCodec();
 

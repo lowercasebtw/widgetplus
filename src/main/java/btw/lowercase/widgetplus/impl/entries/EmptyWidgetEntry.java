@@ -3,13 +3,15 @@ package btw.lowercase.widgetplus.impl.entries;
 import btw.lowercase.widgetplus.impl.WidgetState;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.client.gui.components.AbstractWidget;
-import org.jspecify.annotations.NonNull;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.world.entity.player.Player;
+import org.jspecify.annotations.Nullable;
 
 public class EmptyWidgetEntry implements WidgetEntry {
     public static final EmptyWidgetEntry INSTANCE = new EmptyWidgetEntry();
 
     @Override
-    public @NonNull WidgetState resolve(final AbstractWidget widget) {
+    public WidgetState resolve(final AbstractWidget widget, final @Nullable Screen screen, final @Nullable Player player) {
         return WidgetState.Empty.INSTANCE;
     }
 

@@ -12,16 +12,18 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.util.ExtraCodecs;
+import net.minecraft.world.entity.player.Player;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
 public record SelectWidgetEntry<T>(SelectWidgetProperty<T> property, EntrySelector<T> selector) implements WidgetEntry {
     @Override
-    public @Nullable WidgetState resolve(final AbstractWidget widget) {
-        final T value = this.property.get(widget);
-        return this.selector.get(value).resolve(widget);
+    public WidgetState resolve(final AbstractWidget widget, final @Nullable Screen screen, final @Nullable Player player) {
+        final T value = this.property.get(widget, screen, player);
+        return this.selector.get(value).resolve(widget, screen, player);
     }
 
     public interface EntrySelector<T> {

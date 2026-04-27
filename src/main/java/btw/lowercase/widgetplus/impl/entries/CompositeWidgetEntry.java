@@ -5,17 +5,19 @@ import btw.lowercase.widgetplus.impl.WidgetState;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.client.gui.components.AbstractWidget;
-import org.jspecify.annotations.NonNull;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.world.entity.player.Player;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public record CompositeWidgetEntry(List<WidgetEntry> widgets) implements WidgetEntry {
     @Override
-    public @NonNull WidgetState resolve(final AbstractWidget widget) {
+    public WidgetState resolve(final AbstractWidget widget, final @Nullable Screen screen, final @Nullable Player player) {
         final List<WidgetState> states = new ArrayList<>();
         for (final WidgetEntry entry : this.widgets) {
-            states.add(entry.resolve(widget));
+            states.add(entry.resolve(widget, screen, player));
         }
 
         return new WidgetState.Multiple(states);

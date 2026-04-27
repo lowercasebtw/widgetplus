@@ -4,6 +4,8 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.world.entity.player.Player;
 import org.jspecify.annotations.Nullable;
 
 public record EditBoxContents() implements SelectWidgetProperty<String> {
@@ -12,7 +14,7 @@ public record EditBoxContents() implements SelectWidgetProperty<String> {
     );
 
     @Override
-    public @Nullable String get(final AbstractWidget widget) {
+    public @Nullable String get(final AbstractWidget widget, @Nullable final Screen screen, @Nullable final Player player) {
         return widget instanceof EditBox editBox ? editBox.getValue() : null;
     }
 

@@ -6,12 +6,12 @@
 		"type": "condition",
 		"property": "hovered_or_focused",
 		"on_true": {
-			"type": "texture",
-			"texture": "minecraft:widget/slider_highlighted"
+			"type": "sprite",
+			"sprite": "minecraft:widget/slider_highlighted"
 		},
 		"on_false": {
-			"type": "texture",
-			"texture": "minecraft:widget/slider"
+			"type": "sprite",
+			"sprite": "minecraft:widget/slider"
 		}
 	}
 }

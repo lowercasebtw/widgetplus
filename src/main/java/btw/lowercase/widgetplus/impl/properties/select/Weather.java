@@ -4,7 +4,9 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
@@ -15,7 +17,7 @@ public record Weather() implements SelectWidgetProperty<Weather.Type> {
     );
 
     @Override
-    public @Nullable Type get(final AbstractWidget widget) {
+    public @Nullable Type get(final AbstractWidget widget, @Nullable final Screen screen, @Nullable final Player player) {
         final Level level = Minecraft.getInstance().level;
         if (level != null) {
             if (!level.isRaining() && !level.isThundering()) {

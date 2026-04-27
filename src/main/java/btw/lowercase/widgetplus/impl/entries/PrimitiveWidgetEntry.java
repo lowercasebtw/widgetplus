@@ -8,14 +8,17 @@ import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.world.entity.player.Player;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Optional;
 
 public record PrimitiveWidgetEntry(PrimitiveFunction function, Optional<RenderPipeline> pipeline,
                                    Optional<Bounds> bounds) implements WidgetEntry {
     @Override
-    public WidgetState resolve(final AbstractWidget widget) {
+    public WidgetState resolve(final AbstractWidget widget, final @Nullable Screen screen, final @Nullable Player player) {
         return new WidgetState.Primitive(this.function, this.pipeline, this.bounds);
     }
 

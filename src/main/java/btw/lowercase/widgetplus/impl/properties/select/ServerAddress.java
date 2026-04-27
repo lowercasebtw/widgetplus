@@ -4,8 +4,10 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.multiplayer.ServerData;
-import org.jspecify.annotations.NonNull;
+import net.minecraft.world.entity.player.Player;
+import org.jspecify.annotations.Nullable;
 
 public record ServerAddress() implements SelectWidgetProperty<String> {
     public static final SelectWidgetProperty.Type<ServerAddress, String> TYPE = SelectWidgetProperty.Type.create(
@@ -13,13 +15,13 @@ public record ServerAddress() implements SelectWidgetProperty<String> {
     );
 
     @Override
-    public @NonNull String get(final AbstractWidget widget) {
+    public @Nullable String get(final AbstractWidget widget, @Nullable final Screen screen, @Nullable final Player player) {
         final Minecraft minecraft = Minecraft.getInstance();
         if (minecraft.isSingleplayer()) {
             return "singleplayer";
         } else {
             final ServerData serverData = minecraft.getCurrentServer();
-            return serverData != null ? serverData.ip : "";
+            return serverData != null ? serverData.ip : null;
         }
     }
 

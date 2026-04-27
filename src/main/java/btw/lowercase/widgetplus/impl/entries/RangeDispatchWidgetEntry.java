@@ -8,6 +8,8 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.world.entity.player.Player;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -18,8 +20,8 @@ import java.util.List;
 public record RangeDispatchWidgetEntry(RangeDispatchWidgetProperty property, float scale, float[] thresholds,
                                        WidgetEntry[] entries, WidgetEntry fallback) implements WidgetEntry {
     @Override
-    public @Nullable WidgetState resolve(final AbstractWidget widget) {
-        final float value = this.property.get(widget) * this.scale;
+    public WidgetState resolve(final AbstractWidget widget, final @Nullable Screen screen, final @Nullable Player player) {
+        final float value = this.property.get(widget, screen, player) * this.scale;
 
         WidgetEntry entry;
         if (Float.isNaN(value)) {
@@ -29,7 +31,7 @@ public record RangeDispatchWidgetEntry(RangeDispatchWidgetProperty property, flo
             entry = index == -1 ? this.fallback : this.entries[index];
         }
 
-        return entry.resolve(widget);
+        return entry.resolve(widget, screen, player);
     }
 
     private static int lastIndexLessOrEqual(float[] haystack, float needle) {

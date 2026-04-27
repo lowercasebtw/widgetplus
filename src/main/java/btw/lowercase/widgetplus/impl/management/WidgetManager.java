@@ -4,6 +4,7 @@ import btw.lowercase.widgetplus.WidgetPlus;
 import btw.lowercase.widgetplus.impl.WidgetDefinition;
 import btw.lowercase.widgetplus.impl.WidgetState;
 import btw.lowercase.widgetplus.impl.entries.WidgetEntry;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
@@ -156,7 +157,8 @@ public class WidgetManager {
                     this.bakedEntries.put(definition, baked);
                 }
 
-                final WidgetState state = baked.resolve(widget);
+                final Minecraft minecraft = Minecraft.getInstance();
+                final WidgetState state = baked.resolve(widget, minecraft.screen, minecraft.player);
                 if (state instanceof WidgetState.Fallback) {
                     continue;
                 }

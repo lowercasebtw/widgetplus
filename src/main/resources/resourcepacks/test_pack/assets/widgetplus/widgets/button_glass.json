@@ -7,12 +7,12 @@
 		"property": "is_key_down",
 		"key": "key.keyboard.backspace",
 		"on_true": {
-			"type": "texture",
-			"texture": "minecraft:widget/button_highlighted"
+			"type": "sprite",
+			"sprite": "minecraft:widget/button_highlighted"
 		},
 		"on_false": {
-			"type": "texture",
-			"texture": "minecraft:widget/button"
+			"type": "sprite",
+			"sprite": "minecraft:widget/button"
 		}
 	}
 }

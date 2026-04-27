@@ -6,13 +6,16 @@ import btw.lowercase.widgetplus.impl.util.Bounds;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.world.entity.player.Player;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Optional;
 
 public record CustomWidgetEntry(WidgetEntry entry, Optional<Bounds> bounds) implements WidgetEntry {
     @Override
-    public WidgetState resolve(final AbstractWidget widget) {
-        return new WidgetState.Custom(this.entry.resolve(widget), this.bounds);
+    public WidgetState resolve(final AbstractWidget widget, final @Nullable Screen screen, final @Nullable Player player) {
+        return new WidgetState.Custom(this.entry.resolve(widget, screen, player), this.bounds);
     }
 
     public record Unbaked(WidgetEntry.Unbaked widget, Optional<Bounds> bounds) implements WidgetEntry.Unbaked {

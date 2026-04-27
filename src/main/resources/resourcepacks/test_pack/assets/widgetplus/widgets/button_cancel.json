@@ -11,8 +11,8 @@
 					"translate": "gui.done"
 				},
 				"widget": {
-					"type": "texture",
-					"texture": "widgetplus:widget/button_red"
+					"type": "sprite",
+					"sprite": "widgetplus:widget/button_red"
 				}
 			}
 		],
