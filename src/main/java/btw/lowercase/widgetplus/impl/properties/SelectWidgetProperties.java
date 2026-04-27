@@ -14,6 +14,7 @@ public class SelectWidgetProperties {
     public static void bootstrap() {
         ID_MAPPER.put(WidgetPlus.id("message"), Message.TYPE);
         ID_MAPPER.put(WidgetPlus.id("graphics_preset"), VanillaGraphicsPreset.TYPE);
+        ID_MAPPER.put(WidgetPlus.id("editbox/contents"), EditBoxContents.TYPE);
         ID_MAPPER.put(WidgetPlus.id("server/address"), ServerAddress.TYPE);
         ID_MAPPER.put(WidgetPlus.id("server/motd"), ServerMOTD.TYPE);
         ID_MAPPER.put(WidgetPlus.id("world/dimension"), Dimension.TYPE);
