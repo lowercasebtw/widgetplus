@@ -45,15 +45,15 @@ public record PrimitiveWidgetEntry(PrimitiveFunction function, Optional<RenderPi
             return new PrimitiveWidgetEntry(this.function, Optional.ofNullable(pipeline), this.bounds);
         }
 
-        private Optional<GuiPipelineOverrides> extractPipelineOverrides(final PrimitiveFunction primitiveType) {
+        private Optional<GuiPipelineOverrides> extractPipelineOverrides(final PrimitiveFunction function) {
             Optional<GuiPipelineOverrides> pipelineOverrides = Optional.empty();
-            if (primitiveType instanceof Fill fill) {
+            if (function instanceof Fill fill) {
                 pipelineOverrides = fill.pipelineOverrides();
-            } else if (primitiveType instanceof FillGradient fillGradient) {
+            } else if (function instanceof FillGradient fillGradient) {
                 pipelineOverrides = fillGradient.pipelineOverrides();
-            } else if (primitiveType instanceof Outline outline) {
+            } else if (function instanceof Outline outline) {
                 pipelineOverrides = outline.pipelineOverrides();
-            } else if (primitiveType instanceof OutlineGradient outlineGradient) {
+            } else if (function instanceof OutlineGradient outlineGradient) {
                 pipelineOverrides = outlineGradient.pipelineOverrides();
             }
 
