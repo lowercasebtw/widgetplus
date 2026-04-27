@@ -1,6 +1,7 @@
 package btw.lowercase.widgetplus.impl.entries;
 
 import btw.lowercase.widgetplus.impl.WidgetState;
+import btw.lowercase.widgetplus.impl.util.Bounds;
 import btw.lowercase.widgetplus.impl.util.GuiPipelineOverrides;
 import btw.lowercase.widgetplus.impl.util.UV;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
@@ -16,18 +17,22 @@ import org.jspecify.annotations.Nullable;
 import java.util.Optional;
 
 public record TextureWidgetEntry(Identifier texture,
-                                 Optional<RenderPipeline> pipeline, Optional<UV> uv) implements WidgetEntry {
+                                 Optional<RenderPipeline> pipeline,
+                                 Optional<Bounds> bounds,
+                                 Optional<UV> uv) implements WidgetEntry {
     @Override
     public WidgetState resolve(final AbstractWidget widget, final @Nullable Screen screen, final @Nullable Player player) {
-        return new WidgetState.Texture(this.texture, this.pipeline, this.uv);
+        return new WidgetState.Texture(this.texture, this.pipeline, this.bounds, this.uv);
     }
 
     public record Unbaked(Identifier texture,
                           Optional<GuiPipelineOverrides> pipelineOverrides,
+                          Optional<Bounds> bounds,
                           Optional<UV> uv) implements WidgetEntry.Unbaked {
         public static final MapCodec<Unbaked> MAP_CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
                 Identifier.CODEC.fieldOf("texture").forGetter(Unbaked::texture),
                 GuiPipelineOverrides.CODEC.optionalFieldOf("pipeline_overrides").forGetter(Unbaked::pipelineOverrides),
+                Bounds.CODEC.optionalFieldOf("bounds").forGetter(Unbaked::bounds),
                 UV.CODEC.optionalFieldOf("uv").forGetter(Unbaked::uv)
         ).apply(instance, Unbaked::new));
 
@@ -41,7 +46,7 @@ public record TextureWidgetEntry(Identifier texture,
             final RenderPipeline.Builder builder = RenderPipeline.builder(RenderPipelines.GUI_TEXTURED_SNIPPET);
             builder.withLocation("pipeline/dynamic_widget_" + this.texture.hashCode());
             this.pipelineOverrides.ifPresent(overrides -> overrides.apply(builder));
-            return new TextureWidgetEntry(this.texture, Optional.of(builder.build()), this.uv);
+            return new TextureWidgetEntry(this.texture, Optional.of(builder.build()), this.bounds, this.uv);
         }
     }
 }

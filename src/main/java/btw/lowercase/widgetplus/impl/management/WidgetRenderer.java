@@ -52,6 +52,7 @@ public final class WidgetRenderer {
 
     public static void renderTexture(final WidgetState.Texture texture, final WidgetRenderContext renderContext) {
         final UV uv = texture.uv().orElse(new UV(0.0F, 0.0F, 1.0F, 1.0F));
+        texture.bounds().ifPresent(renderContext::setBounds);
         renderContext.guiGraphics().innerBlit(
                 texture.pipeline().orElse(renderContext.pipeline()),
                 texture.texture(),
