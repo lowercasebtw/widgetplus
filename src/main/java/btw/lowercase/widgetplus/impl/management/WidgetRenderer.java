@@ -6,7 +6,6 @@ import btw.lowercase.widgetplus.impl.WidgetState;
 import btw.lowercase.widgetplus.impl.entries.primitive.Fill;
 import btw.lowercase.widgetplus.impl.entries.primitive.FillGradient;
 import btw.lowercase.widgetplus.impl.entries.primitive.Outline;
-import btw.lowercase.widgetplus.impl.entries.primitive.OutlineGradient;
 import btw.lowercase.widgetplus.impl.util.Bounds;
 import btw.lowercase.widgetplus.impl.util.UV;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
@@ -71,8 +70,6 @@ public final class WidgetRenderer {
                     renderContext.guiGraphics().innerFill(renderContext.pipeline(), TextureSetup.noTexture(), renderContext.x(), renderContext.y(), renderContext.x() + renderContext.width(), renderContext.y() + renderContext.height(), fillGradient.startColor(), fillGradient.endColor());
             case Outline outline ->
                     outline(renderContext.guiGraphics(), renderContext.pipeline(), renderContext.x(), renderContext.y(), renderContext.width(), renderContext.height(), outline.color(), outline.lineWidth());
-            case OutlineGradient outlineGradient ->
-                    outlineGradient(renderContext.guiGraphics(), renderContext.pipeline(), renderContext.x(), renderContext.y(), renderContext.width(), renderContext.height(), outlineGradient.startColor(), outlineGradient.endColor(), outlineGradient.lineWidth());
             case null, default ->
                     throw new RuntimeException("TODO: Implement primitive rendering for type: " + primitive.function());
         }
@@ -83,12 +80,5 @@ public final class WidgetRenderer {
         guiGraphics.fill(pipeline, x, (int) (y + height - lineWidth), x + width, y + height, color);
         guiGraphics.fill(pipeline, x, (int) (y + lineWidth), (int) (x + lineWidth), (int) (y + height - lineWidth), color);
         guiGraphics.fill(pipeline, (int) (x + width - lineWidth), (int) (y + lineWidth), x + width, (int) (y + height - lineWidth), color);
-    }
-
-    private static void outlineGradient(final GuiGraphicsExtractor guiGraphics, final RenderPipeline pipeline, final int x, final int y, final int width, final int height, final int startColor, final int endColor, final float lineWidth) {
-        guiGraphics.innerFill(pipeline, TextureSetup.noTexture(), x, y, x + width, (int) (y + lineWidth), startColor, endColor);
-        guiGraphics.innerFill(pipeline, TextureSetup.noTexture(), x, (int) (y + height - lineWidth), x + width, y + height, startColor, endColor);
-        guiGraphics.innerFill(pipeline, TextureSetup.noTexture(), x, (int) (y + lineWidth), (int) (x + lineWidth), (int) (y + height - lineWidth), startColor, endColor);
-        guiGraphics.innerFill(pipeline, TextureSetup.noTexture(), (int) (x + width - lineWidth), (int) (y + lineWidth), x + width, (int) (y + height - lineWidth), startColor, endColor);
     }
 }
