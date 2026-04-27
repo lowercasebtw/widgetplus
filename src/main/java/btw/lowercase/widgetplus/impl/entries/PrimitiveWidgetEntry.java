@@ -24,7 +24,7 @@ public record PrimitiveWidgetEntry(PrimitiveFunction function, Optional<RenderPi
 
     public record Unbaked(PrimitiveFunction function, Optional<Bounds> bounds) implements WidgetEntry.Unbaked {
         public static final MapCodec<Unbaked> MAP_CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-                PrimitiveTypes.CODEC.fieldOf("function").forGetter(Unbaked::function),
+                PrimitiveTypes.MAP_CODEC.forGetter(Unbaked::function),
                 Bounds.CODEC.optionalFieldOf("bounds").forGetter(Unbaked::bounds)
         ).apply(instance, Unbaked::new));
 

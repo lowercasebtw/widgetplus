@@ -6,7 +6,9 @@ import net.minecraft.util.ExtraCodecs;
 
 public class PrimitiveTypes {
     private static final ExtraCodecs.LateBoundIdMapper<String, MapCodec<? extends PrimitiveFunction>> ID_MAPPER = new ExtraCodecs.LateBoundIdMapper<>();
-    public static final Codec<PrimitiveFunction> CODEC = ID_MAPPER.codec(Codec.STRING).dispatch(PrimitiveFunction::type, c -> c);
+    public static final MapCodec<PrimitiveFunction> MAP_CODEC = ID_MAPPER
+            .codec(Codec.STRING)
+            .dispatchMap("function", PrimitiveFunction::type, c -> c);
 
     public static void bootstrap() {
         ID_MAPPER.put("fill", Fill.MAP_CODEC);
