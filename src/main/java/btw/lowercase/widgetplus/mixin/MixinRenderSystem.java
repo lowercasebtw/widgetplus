@@ -44,7 +44,6 @@ public abstract class MixinRenderSystem {
             final Minecraft minecraft = Minecraft.getInstance();
             final double mouseX = minecraft.mouseHandler.xpos();
             final double mouseY = minecraft.mouseHandler.ypos();
-
             final ElapsedTimes elapsedTimes = ((ElapsedTimes) minecraft);
             widgetplus$dynamicUniforms = dynamicUniforms.write(
                     new Vector2d(mouseX, mouseY),

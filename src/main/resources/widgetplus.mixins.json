@@ -8,8 +8,9 @@
 		"MixinAbstractSliderButton",
 		"MixinClientBootstrap",
 		"MixinFramerateLimitTracker_UncapUIFPS",
-		"MixinRenderSystem",
-		"MixinMinecraft"
+		"MixinMinecraft",
+		"MixinRenderPipeline$Builder",
+		"MixinRenderSystem"
 	],
 	"injectors": {
 		"defaultRequire": 1
