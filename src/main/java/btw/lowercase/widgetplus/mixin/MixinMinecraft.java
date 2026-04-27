@@ -19,12 +19,12 @@ public abstract class MixinMinecraft implements ElapsedTimes {
     private long widgetplus$pauseTimestamp = 0;
 
     @Unique
-    private long widgetplus$openScreenTimestamp = 0;
+    private long widgetplus$screenOpenTimestamp = 0;
 
     @Inject(method = "tick", at = @At("TAIL"))
     private void widgetplus$updatePauseTimestamp(final CallbackInfo ci) {
         if (this.widgetplus$pauseTimestamp != 0 && !this.isPaused()) {
-            this.widgetplus$openScreenTimestamp = 0;
+            this.widgetplus$screenOpenTimestamp = 0;
         } else if (this.widgetplus$pauseTimestamp == 0 && this.isPaused()) {
             this.widgetplus$pauseTimestamp = System.currentTimeMillis();
         }
@@ -32,7 +32,7 @@ public abstract class MixinMinecraft implements ElapsedTimes {
 
     @Inject(method = "setScreen", at = @At("HEAD"))
     private void widgetplus$updateScreenTimestamp(final Screen screen, final CallbackInfo ci) {
-        this.widgetplus$openScreenTimestamp = screen != null ? System.currentTimeMillis() : 0;
+        this.widgetplus$screenOpenTimestamp = screen != null ? System.currentTimeMillis() : 0;
     }
 
     @Override
@@ -41,7 +41,7 @@ public abstract class MixinMinecraft implements ElapsedTimes {
     }
 
     @Override
-    public int widgetplus$getElapsedOpenScreenTime() {
-        return this.widgetplus$openScreenTimestamp != 0 ? Math.toIntExact(System.currentTimeMillis() - this.widgetplus$openScreenTimestamp) : 0;
+    public int widgetplus$getElapsedScreenOpenTime() {
+        return this.widgetplus$screenOpenTimestamp != 0 ? Math.toIntExact(System.currentTimeMillis() - this.widgetplus$screenOpenTimestamp) : 0;
     }
 }

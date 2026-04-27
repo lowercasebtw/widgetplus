@@ -48,7 +48,7 @@ public abstract class MixinRenderSystem {
             widgetplus$dynamicUniforms = dynamicUniforms.write(
                     new Vector2d(mouseX, mouseY),
                     elapsedTimes.widgetplus$getElapsedPauseTime(),
-                    elapsedTimes.widgetplus$getElapsedOpenScreenTime()
+                    elapsedTimes.widgetplus$getElapsedScreenOpenTime()
             );
         }
     }
