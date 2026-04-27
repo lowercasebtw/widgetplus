@@ -5,6 +5,9 @@ import btw.lowercase.widgetplus.impl.WidgetDefinition;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mojang.serialization.JsonOps;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.toasts.SystemToast;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.Resource;
@@ -49,6 +52,17 @@ public class WidgetPlusReloadListener implements PreparableReloadListener {
                     error.getAndIncrement();
                 }
             }
+
+            final int finalErrorCount = error.intValue();
+            if (error.intValue() == 0) {
+                return;
+            }
+            String errorTitle = (error.intValue() > 1) ? "widgetplus.info.errorPlural" : "widgetplus.info.errorSingular";
+
+            SystemToast.addOrUpdate(Minecraft.getInstance().getToastManager(), SystemToast.SystemToastId.PACK_LOAD_FAILURE,
+                    Component.translatable(errorTitle, error.intValue()),
+                    Component.translatable("widgetplus.info.checkLogs") );
+
         }).thenCompose(preparationBarrier::wait);
     }
 }

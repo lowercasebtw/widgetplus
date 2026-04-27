@@ -2,5 +2,8 @@
 	"widgetplus.title": "WidgetPlus",
 	"widgetplus.category.main": "Main",
 	"widgetplus.enabled": "Enabled",
-	"widgetplus.uncapGuiFramerate": "Uncap GUI Framerate"
+	"widgetplus.uncapGuiFramerate": "Uncap GUI Framerate",
+	"widgetplus.info.errorPlural": "%d WidgetPlus errors",
+	"widgetplus.info.errorSingular": "%d WidgetPlus error",
+	"widgetplus.info.checkLogs": "Check the logs for more information"
 }
