@@ -3,13 +3,13 @@ package btw.lowercase.widgetplus.mixin;
 import btw.lowercase.widgetplus.WidgetPlus;
 import btw.lowercase.widgetplus.config.WidgetPlusConfig;
 import btw.lowercase.widgetplus.impl.management.WidgetPlusDynamicUniforms;
+import btw.lowercase.widgetplus.impl.util.ScreenTime;
 import com.mojang.blaze3d.TracyFrameCapture;
 import com.mojang.blaze3d.buffers.GpuBufferSlice;
 import com.mojang.blaze3d.systems.GpuDevice;
 import com.mojang.blaze3d.systems.RenderPass;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.MouseHandler;
 import net.minecraft.client.renderer.DynamicUniforms;
 import org.joml.Vector2d;
 import org.spongepowered.asm.mixin.Mixin;
@@ -41,10 +41,19 @@ public abstract class MixinRenderSystem {
     private static void widgetplus$setupUbo(final CallbackInfoReturnable<DynamicUniforms> cir) {
         final WidgetPlusDynamicUniforms dynamicUniforms = WidgetPlus.dynamicUniforms();
         if (WidgetPlusConfig.instance().enabled && dynamicUniforms != null) {
-            final MouseHandler mouseHandler = Minecraft.getInstance().mouseHandler;
+            final Minecraft minecraft = Minecraft.getInstance();
+            final double mouseX = minecraft.mouseHandler.xpos();
+            final double mouseY = minecraft.mouseHandler.ypos();
+
+            int elapsedOpenScreenTime = 0;
+            if (minecraft.screen != null) {
+                elapsedOpenScreenTime = ((ScreenTime) minecraft.screen).widgetplus$getElapsedOpenTime();
+            }
+
             widgetplus$dynamicUniforms = dynamicUniforms.write(
-                    new Vector2d(mouseHandler.xpos(), mouseHandler.ypos()),
-                    0, 0 // TODO
+                    new Vector2d(mouseX, mouseY),
+                    0, // TODO
+                    elapsedOpenScreenTime
             );
         }
     }

@@ -14,8 +14,8 @@ public class WidgetPlusDynamicUniforms implements AutoCloseable {
 
     private final DynamicUniformStorage<Data> storage = new DynamicUniformStorage<>("Widget Plus Uniform UBO", UBO_SIZE, 2);
 
-    public GpuBufferSlice write(final Vector2d mousePosition, final int elapsedPauseTime, final int screenOpenTime) {
-        return this.storage.writeUniform(new Data(mousePosition, elapsedPauseTime, screenOpenTime));
+    public GpuBufferSlice write(final Vector2d mousePosition, final int elapsedPauseTime, final int elapsedScreenOpenTime) {
+        return this.storage.writeUniform(new Data(mousePosition, elapsedPauseTime, elapsedScreenOpenTime));
     }
 
     public void reset() {
@@ -28,12 +28,12 @@ public class WidgetPlusDynamicUniforms implements AutoCloseable {
     }
 
     public record Data(Vector2d mousePosition, int elapsedPauseTime,
-                       int screenOpenTime) implements DynamicUniformStorage.DynamicUniform {
+                       int elapsedScreenOpenTime) implements DynamicUniformStorage.DynamicUniform {
         public void write(final @NonNull ByteBuffer buffer) {
             Std140Builder.intoBuffer(buffer)
                     .putVec2((float) this.mousePosition.x, (float) this.mousePosition.y)
                     .putInt(this.elapsedPauseTime)
-                    .putInt(this.screenOpenTime);
+                    .putInt(this.elapsedScreenOpenTime);
         }
     }
 }

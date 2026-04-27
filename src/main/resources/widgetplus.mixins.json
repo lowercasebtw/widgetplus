@@ -8,7 +8,8 @@
 		"MixinAbstractSliderButton",
 		"MixinClientBootstrap",
 		"MixinFramerateLimitTracker_UncapUIFPS",
-		"MixinRenderSystem"
+		"MixinRenderSystem",
+		"MixinScreen"
 	],
 	"injectors": {
 		"defaultRequire": 1
