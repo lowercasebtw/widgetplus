@@ -1,7 +1,8 @@
 package btw.lowercase.widgetplus.impl.states;
 
-import btw.lowercase.widgetplus.impl.WidgetEntries;
 import btw.lowercase.widgetplus.impl.WidgetState;
+import btw.lowercase.widgetplus.impl.states.primitive.PrimitiveType;
+import btw.lowercase.widgetplus.impl.states.primitive.PrimitiveTypes;
 import btw.lowercase.widgetplus.impl.util.Bounds;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -9,15 +10,15 @@ import net.minecraft.client.gui.components.AbstractWidget;
 
 import java.util.Optional;
 
-public record CustomWidgetEntry(WidgetEntry entry, Optional<Bounds> bounds) implements WidgetEntry {
+public record PrimitiveWidgetEntry(PrimitiveType function, Optional<Bounds> bounds) implements WidgetEntry {
     @Override
     public WidgetState resolve(final AbstractWidget widget) {
-        return new WidgetState.Custom(this.entry.resolve(widget), this.bounds);
+        return new WidgetState.Primitive(this.function, this.bounds);
     }
 
-    public record Unbaked(WidgetEntry.Unbaked widget, Optional<Bounds> bounds) implements WidgetEntry.Unbaked {
+    public record Unbaked(PrimitiveType function, Optional<Bounds> bounds) implements WidgetEntry.Unbaked {
         public static final MapCodec<Unbaked> MAP_CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-                WidgetEntries.CODEC.fieldOf("widget").forGetter(Unbaked::widget),
+                PrimitiveTypes.CODEC.fieldOf("function").forGetter(Unbaked::function),
                 Bounds.CODEC.optionalFieldOf("bounds").forGetter(Unbaked::bounds)
         ).apply(instance, Unbaked::new));
 
@@ -28,7 +29,7 @@ public record CustomWidgetEntry(WidgetEntry entry, Optional<Bounds> bounds) impl
 
         @Override
         public WidgetEntry bake() {
-            return new CustomWidgetEntry(this.widget.bake(), this.bounds);
+            return new PrimitiveWidgetEntry(this.function, this.bounds);
         }
     }
 }

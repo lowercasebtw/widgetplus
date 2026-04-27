@@ -1,6 +1,7 @@
 package btw.lowercase.widgetplus.impl;
 
-import btw.lowercase.widgetplus.impl.states.CustomWidgetEntry;
+import btw.lowercase.widgetplus.impl.states.primitive.PrimitiveType;
+import btw.lowercase.widgetplus.impl.util.Bounds;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import net.minecraft.resources.Identifier;
 
@@ -8,13 +9,16 @@ import java.util.List;
 import java.util.Optional;
 
 public interface WidgetState {
-    record Textured(Identifier texture, Optional<RenderPipeline> pipeline) implements WidgetState {
-    }
-
     record Multiple(List<WidgetState> states) implements WidgetState {
     }
 
-    record Custom(WidgetState state, Optional<CustomWidgetEntry.Bounds> bounds) implements WidgetState {
+    record Textured(Identifier texture, Optional<RenderPipeline> pipeline) implements WidgetState {
+    }
+
+    record Primitive(PrimitiveType function, Optional<Bounds> bounds) implements WidgetState {
+    }
+
+    record Custom(WidgetState state, Optional<Bounds> bounds) implements WidgetState {
     }
 
     record Empty() implements WidgetState {
