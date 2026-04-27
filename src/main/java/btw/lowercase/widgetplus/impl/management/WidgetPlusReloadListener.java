@@ -54,15 +54,10 @@ public class WidgetPlusReloadListener implements PreparableReloadListener {
             }
 
             final int finalErrorCount = error.intValue();
-            if (error.intValue() == 0) {
-                return;
+            if (finalErrorCount != 0) {
+                final String errorTitle = (finalErrorCount > 1) ? "widgetplus.info.errorPlural" : "widgetplus.info.errorSingular";
+                SystemToast.addOrUpdate(Minecraft.getInstance().getToastManager(), SystemToast.SystemToastId.PACK_LOAD_FAILURE, Component.translatable(errorTitle, error.intValue()), Component.translatable("widgetplus.info.checkLogs"));
             }
-            String errorTitle = (error.intValue() > 1) ? "widgetplus.info.errorPlural" : "widgetplus.info.errorSingular";
-
-            SystemToast.addOrUpdate(Minecraft.getInstance().getToastManager(), SystemToast.SystemToastId.PACK_LOAD_FAILURE,
-                    Component.translatable(errorTitle, error.intValue()),
-                    Component.translatable("widgetplus.info.checkLogs") );
-
         }).thenCompose(preparationBarrier::wait);
     }
 }
