@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface WidgetState {
-    record Multiple(List<WidgetState> states) implements WidgetState {
+    record Multiple(List<WidgetState> states, boolean inherit) implements WidgetState {
     }
 
     record Sprite(Identifier sprite, Optional<RenderPipeline> pipeline) implements WidgetState {
