@@ -5,6 +5,7 @@ import com.mojang.blaze3d.buffers.Std140Builder;
 import com.mojang.blaze3d.buffers.Std140SizeCalculator;
 import net.minecraft.client.renderer.DynamicUniformStorage;
 import org.joml.Vector2d;
+import org.joml.Vector2f;
 import org.jspecify.annotations.NonNull;
 
 import java.nio.ByteBuffer;
@@ -15,7 +16,7 @@ public class WidgetPlusDynamicUniforms implements AutoCloseable {
     private final DynamicUniformStorage<Data> storage = new DynamicUniformStorage<>("Widget Plus Uniform UBO", UBO_SIZE, 2);
 
     public GpuBufferSlice write(final Vector2d mousePosition, final int elapsedPauseTime, final int elapsedScreenOpenTime) {
-        return this.storage.writeUniform(new Data(mousePosition, elapsedPauseTime, elapsedScreenOpenTime));
+        return this.storage.writeUniform(new Data(new Vector2f(mousePosition), elapsedPauseTime, elapsedScreenOpenTime));
     }
 
     public void reset() {
@@ -27,11 +28,11 @@ public class WidgetPlusDynamicUniforms implements AutoCloseable {
         this.storage.close();
     }
 
-    public record Data(Vector2d mousePosition, int elapsedPauseTime,
+    public record Data(Vector2f mousePosition, int elapsedPauseTime,
                        int elapsedScreenOpenTime) implements DynamicUniformStorage.DynamicUniform {
         public void write(final @NonNull ByteBuffer buffer) {
             Std140Builder.intoBuffer(buffer)
-                    .putVec2((float) this.mousePosition.x, (float) this.mousePosition.y)
+                    .putVec2(this.mousePosition)
                     .putInt(this.elapsedPauseTime)
                     .putInt(this.elapsedScreenOpenTime);
         }

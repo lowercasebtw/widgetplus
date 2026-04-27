@@ -9,7 +9,7 @@
 		"MixinClientBootstrap",
 		"MixinFramerateLimitTracker_UncapUIFPS",
 		"MixinRenderSystem",
-		"MixinScreen"
+		"MixinMinecraft"
 	],
 	"injectors": {
 		"defaultRequire": 1

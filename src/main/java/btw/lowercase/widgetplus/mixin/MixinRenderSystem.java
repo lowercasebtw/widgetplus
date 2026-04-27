@@ -47,7 +47,7 @@ public abstract class MixinRenderSystem {
 
             int elapsedOpenScreenTime = 0;
             if (minecraft.screen != null) {
-                elapsedOpenScreenTime = ((ScreenTime) minecraft.screen).widgetplus$getElapsedOpenTime();
+                elapsedOpenScreenTime = ((ScreenTime) minecraft).widgetplus$getElapsedOpenScreenTime();
             }
 
             widgetplus$dynamicUniforms = dynamicUniforms.write(
