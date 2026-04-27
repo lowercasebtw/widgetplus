@@ -56,8 +56,6 @@ public record PrimitiveWidgetEntry(PrimitiveFunction function, Optional<RenderPi
                 pipelineOverrides = fillGradient.pipelineOverrides();
             } else if (function instanceof Outline outline) {
                 pipelineOverrides = outline.pipelineOverrides();
-            } else if (function instanceof OutlineGradient outlineGradient) {
-                pipelineOverrides = outlineGradient.pipelineOverrides();
             }
 
             return pipelineOverrides;
