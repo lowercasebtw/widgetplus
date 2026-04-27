@@ -23,7 +23,7 @@ public class WidgetManager {
     private WidgetDefinitionCollection getOrSetCollection(final Identifier type) {
         WidgetDefinitionCollection collection;
         if (!this.entries.containsKey(type)) {
-            collection = new WidgetDefinitionCollection(type);
+            collection = new WidgetDefinitionCollection();
             this.entries.put(type, collection);
         } else {
             collection = this.entries.get(type);
@@ -40,12 +40,8 @@ public class WidgetManager {
         this.register(typeIdentifier(type), id, widgetDefinition);
     }
 
-    public WidgetState getState(final Identifier type, final AbstractWidget widget) {
-        return this.getState(type, widget, 0);
-    }
-
-    public WidgetState getState(final WidgetDefinition.Type type, final AbstractWidget widget, final int hashOffset) {
-        return this.getState(typeIdentifier(type), widget, hashOffset);
+    public WidgetState getState(final WidgetDefinition.Type type, final AbstractWidget widget, final int hash_offset) {
+        return this.getState(typeIdentifier(type), widget, hash_offset);
     }
 
     public WidgetState getState(final WidgetDefinition.Type type, final AbstractWidget widget) {
@@ -77,9 +73,6 @@ public class WidgetManager {
 
     // A collection of WidgetDefinitions based off their widget type.
     private static class WidgetDefinitionCollection {
-        // Should we get rid of this? dont know if we'll need to access it.
-        private final Identifier type;
-
         // Holds the raw definitions by their file path.
         // NOTE: Should we make this have a resource pack prefix to deal with conflicts?
         // ex. minecraft:button, minecraft:multiplayer/disconnect_button
@@ -95,8 +88,7 @@ public class WidgetManager {
         // Baked definitions here
         private final HashMap<WidgetDefinition, WidgetEntry> bakedEntries;
 
-        public WidgetDefinitionCollection(final Identifier type) {
-            this.type = type;
+        public WidgetDefinitionCollection() {
             this.hashValueLookup = new HashMap<>();
             this.definitions = new HashMap<>();
             this.identifiersOrder = new ArrayList<>();
