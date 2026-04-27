@@ -18,39 +18,37 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class WidgetPlusReloadListener implements PreparableReloadListener {
+    public static final String WIDGETS_FOLDER = "widgets";
+
+    private static boolean isJson(final Identifier identifier) {
+        return identifier.getPath().endsWith(".json");
+    }
+
     @Override
     public @NonNull CompletableFuture<Void> reload(final @NonNull SharedState sharedState, final @NonNull Executor taskExecutor, final PreparationBarrier preparationBarrier, final @NonNull Executor reloadExecutor) {
         return CompletableFuture.runAsync(() -> {
             final WidgetManager widgetManager = WidgetPlus.getWidgetManager();
             widgetManager.clear();
-
-            int total = 0;
             final AtomicInteger successful = new AtomicInteger();
             final AtomicInteger error = new AtomicInteger();
-            for (Map.Entry<Identifier, Resource> entry : sharedState.resourceManager().listResources("widgets", Identifier -> Identifier.getPath().endsWith(".json")).entrySet()) {
-                {
-                    total += 1;
-
-                    final Identifier id = entry.getKey();
-                    final Resource resource = entry.getValue();
-                    try (final InputStream stream = resource.open()) {
-                        final JsonObject json = JsonParser.parseReader(new InputStreamReader(stream)).getAsJsonObject();
-                        WidgetDefinition.CODEC.parse(JsonOps.INSTANCE, json).ifSuccess(widgetDefinition -> {
-                            widgetManager.register(widgetDefinition.target().type(), id, widgetDefinition);
-                            successful.getAndIncrement();
-                        }).ifError(widgetDefinitionError -> {
-                            WidgetPlus.getLogger().error(widgetDefinitionError.message());
-                            error.getAndIncrement();
-                        });
-                    } catch (final Throwable throwable) {
-                        WidgetPlus.getLogger().error("Couldn't parse '{}': \n{}", id, throwable.getCause());
+            for (final Map.Entry<Identifier, Resource> entry : sharedState.resourceManager().listResources(WIDGETS_FOLDER, WidgetPlusReloadListener::isJson).entrySet()) {
+                final Identifier id = entry.getKey();
+                final Resource resource = entry.getValue();
+                try (final InputStream stream = resource.open()) {
+                    final JsonObject json = JsonParser.parseReader(new InputStreamReader(stream)).getAsJsonObject();
+                    WidgetDefinition.CODEC.parse(JsonOps.INSTANCE, json).ifSuccess(widgetDefinition -> {
+                        widgetManager.register(widgetDefinition.target().type(), id, widgetDefinition);
+                        successful.getAndIncrement();
+                    }).ifError(widgetDefinitionError -> {
+                        WidgetPlus.getLogger().error(widgetDefinitionError.message());
                         error.getAndIncrement();
-                    }
+                    });
+                } catch (final Throwable throwable) {
+                    WidgetPlus.getLogger().error("Couldn't parse '{}'", id);
+                    throwable.printStackTrace();
+                    error.getAndIncrement();
                 }
             }
-
-            WidgetPlus.getLogger().info("Finished loading {} widgets", total);
-            WidgetPlus.getLogger().info("{} Parsed jsons, {} Errors.", successful, error);
         }).thenCompose(preparationBarrier::wait);
     }
 }
