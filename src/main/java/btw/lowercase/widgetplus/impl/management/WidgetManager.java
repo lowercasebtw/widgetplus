@@ -165,10 +165,15 @@ public class WidgetManager {
                     this.bakedEntries.put(definition, baked);
                 }
 
-                return baked.resolve(widget);
+                final WidgetState state = baked.resolve(widget);
+                if (state instanceof WidgetState.Fallback) {
+                    continue;
+                }
+
+                return state;
             }
 
-            return null;
+            return WidgetState.Default.INSTANCE;
         }
     }
 }

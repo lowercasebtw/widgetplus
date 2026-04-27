@@ -17,6 +17,10 @@ public interface WidgetState {
         public static final Empty INSTANCE = new Empty();
     }
 
+    record Fallback() implements WidgetState {
+        public static final Fallback INSTANCE = new Fallback();
+    }
+
     record Default() implements WidgetState {
         public static final Default INSTANCE = new Default();
     }
