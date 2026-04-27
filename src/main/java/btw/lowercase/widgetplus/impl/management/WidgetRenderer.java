@@ -80,8 +80,8 @@ public final class WidgetRenderer {
                     this.guiGraphicsExtractor,
                     this.pipeline,
                     this.location,
-                    bounds.x().orElse(this.x),
-                    bounds.y().orElse(this.y),
+                    bounds.getX(this.x),
+                    bounds.getY(this.y),
                     bounds.width().orElse(this.width),
                     bounds.height().orElse(this.height)
             );
