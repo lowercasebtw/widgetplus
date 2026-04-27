@@ -34,9 +34,35 @@ public final class Utils {
             destFactorOf(dstAlpha.orElse(dstColor))
     )));
 
+    public static final Codec<Integer> WRITE_MASK_CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            Codec.BOOL.optionalFieldOf("red", true).forGetter(it -> (it & ColorTargetState.WRITE_RED) != 0),
+            Codec.BOOL.optionalFieldOf("green", true).forGetter(it -> (it & ColorTargetState.WRITE_GREEN) != 0),
+            Codec.BOOL.optionalFieldOf("blue", true).forGetter(it -> (it & ColorTargetState.WRITE_BLUE) != 0),
+            Codec.BOOL.optionalFieldOf("alpha", true).forGetter(it -> (it & ColorTargetState.WRITE_ALPHA) != 0)
+    ).apply(instance, (red, green, blue, alpha) -> {
+        int mask = 0;
+        if (red) {
+            mask |= ColorTargetState.WRITE_RED;
+        }
+
+        if (green) {
+            mask |= ColorTargetState.WRITE_GREEN;
+        }
+
+        if (blue) {
+            mask |= ColorTargetState.WRITE_BLUE;
+        }
+
+        if (alpha) {
+            mask |= ColorTargetState.WRITE_ALPHA;
+        }
+
+        return mask;
+    }));
+
     public static final Codec<ColorTargetState> COLOR_TARGET_STATE_CODEC = RecordCodecBuilder.create(instance -> instance.group(
             BLEND_FUNCTION_CODEC.optionalFieldOf("blend").forGetter(ColorTargetState::blendFunction),
-            Codec.INT.optionalFieldOf("write_mask", ColorTargetState.WRITE_ALL).forGetter(ColorTargetState::writeMask)
+            WRITE_MASK_CODEC.optionalFieldOf("write_mask", ColorTargetState.WRITE_ALL).forGetter(ColorTargetState::writeMask)
     ).apply(instance, ColorTargetState::new));
 
     private static SourceFactor sourceFactorOf(final String name) {
