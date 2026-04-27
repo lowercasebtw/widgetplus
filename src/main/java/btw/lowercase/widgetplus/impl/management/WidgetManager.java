@@ -61,7 +61,6 @@ public class WidgetManager {
         if (collection != null) {
             return collection.getState(widget, hash_offset);
         } else {
-            // TODO/NOTE: Return default widget if no widget is found in registry
             return WidgetState.Default.INSTANCE;
         }
     }
