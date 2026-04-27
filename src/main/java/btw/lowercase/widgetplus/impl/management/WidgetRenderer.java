@@ -70,25 +70,25 @@ public final class WidgetRenderer {
             case FillGradient fillGradient ->
                     renderContext.guiGraphics().innerFill(renderContext.pipeline(), TextureSetup.noTexture(), renderContext.x(), renderContext.y(), renderContext.x() + renderContext.width(), renderContext.y() + renderContext.height(), fillGradient.startColor(), fillGradient.endColor());
             case Outline outline ->
-                    outline(renderContext.guiGraphics(), renderContext.pipeline(), renderContext.x(), renderContext.y(), renderContext.width(), renderContext.height(), outline.color());
+                    outline(renderContext.guiGraphics(), renderContext.pipeline(), renderContext.x(), renderContext.y(), renderContext.width(), renderContext.height(), outline.color(), outline.lineWidth());
             case OutlineGradient outlineGradient ->
-                    outlineGradient(renderContext.guiGraphics(), renderContext.pipeline(), renderContext.x(), renderContext.y(), renderContext.width(), renderContext.height(), outlineGradient.startColor(), outlineGradient.endColor());
+                    outlineGradient(renderContext.guiGraphics(), renderContext.pipeline(), renderContext.x(), renderContext.y(), renderContext.width(), renderContext.height(), outlineGradient.startColor(), outlineGradient.endColor(), outlineGradient.lineWidth());
             case null, default ->
                     throw new RuntimeException("TODO: Implement primitive rendering for type: " + primitive.function());
         }
     }
 
-    private static void outline(final GuiGraphicsExtractor guiGraphics, final RenderPipeline pipeline, final int x, final int y, final int width, final int height, final int color) {
-        guiGraphics.fill(pipeline, x, y, x + width, y + 1, color);
-        guiGraphics.fill(pipeline, x, y + height - 1, x + width, y + height, color);
-        guiGraphics.fill(pipeline, x, y + 1, x + 1, y + height - 1, color);
-        guiGraphics.fill(pipeline, x + width - 1, y + 1, x + width, y + height - 1, color);
+    private static void outline(final GuiGraphicsExtractor guiGraphics, final RenderPipeline pipeline, final int x, final int y, final int width, final int height, final int color, final float lineWidth) {
+        guiGraphics.fill(pipeline, x, y, x + width, (int) (y + lineWidth), color);
+        guiGraphics.fill(pipeline, x, (int) (y + height - lineWidth), x + width, y + height, color);
+        guiGraphics.fill(pipeline, x, (int) (y + lineWidth), (int) (x + lineWidth), (int) (y + height - lineWidth), color);
+        guiGraphics.fill(pipeline, (int) (x + width - lineWidth), (int) (y + lineWidth), x + width, (int) (y + height - lineWidth), color);
     }
 
-    private static void outlineGradient(final GuiGraphicsExtractor guiGraphics, final RenderPipeline pipeline, final int x, final int y, final int width, final int height, final int startColor, final int endColor) {
-        guiGraphics.innerFill(pipeline, TextureSetup.noTexture(), x, y, x + width, y + 1, startColor, endColor);
-        guiGraphics.innerFill(pipeline, TextureSetup.noTexture(), x, y + height - 1, x + width, y + height, startColor, endColor);
-        guiGraphics.innerFill(pipeline, TextureSetup.noTexture(), x, y + 1, x + 1, y + height - 1, startColor, endColor);
-        guiGraphics.innerFill(pipeline, TextureSetup.noTexture(), x + width - 1, y + 1, x + width, y + height - 1, startColor, endColor);
+    private static void outlineGradient(final GuiGraphicsExtractor guiGraphics, final RenderPipeline pipeline, final int x, final int y, final int width, final int height, final int startColor, final int endColor, final float lineWidth) {
+        guiGraphics.innerFill(pipeline, TextureSetup.noTexture(), x, y, x + width, (int) (y + lineWidth), startColor, endColor);
+        guiGraphics.innerFill(pipeline, TextureSetup.noTexture(), x, (int) (y + height - lineWidth), x + width, y + height, startColor, endColor);
+        guiGraphics.innerFill(pipeline, TextureSetup.noTexture(), x, (int) (y + lineWidth), (int) (x + lineWidth), (int) (y + height - lineWidth), startColor, endColor);
+        guiGraphics.innerFill(pipeline, TextureSetup.noTexture(), (int) (x + width - lineWidth), (int) (y + lineWidth), x + width, (int) (y + height - lineWidth), startColor, endColor);
     }
 }
