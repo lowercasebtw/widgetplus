@@ -16,7 +16,8 @@ public interface WidgetState {
     record Sprite(Identifier sprite, Optional<RenderPipeline> pipeline) implements WidgetState {
     }
 
-    record Texture(Identifier texture, Optional<RenderPipeline> pipeline, Optional<UV> uv) implements WidgetState {
+    record Texture(Identifier texture, Optional<RenderPipeline> pipeline, Optional<Bounds> bounds,
+                   Optional<UV> uv) implements WidgetState {
     }
 
     record Primitive(PrimitiveFunction function, Optional<RenderPipeline> pipeline,
