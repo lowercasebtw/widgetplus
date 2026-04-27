@@ -72,7 +72,7 @@ public class WidgetManager {
     }
 
     public WidgetDefinition get(final Identifier type, final Identifier id) {
-        final WidgetDefinitionCollection collection = entries.getOrDefault(type, null);
+        final WidgetDefinitionCollection collection = this.entries.getOrDefault(type, null);
         return collection != null ? collection.getDefinition(id) : null;
     }
 
@@ -132,8 +132,8 @@ public class WidgetManager {
         // Returns the definition from either the lookup or the first one it matches.
         public WidgetDefinition getDefinition(final int hash_value) {
             // Look over all the hash values first, then the rest of the orders second.
-            final ArrayList<Identifier> lookup = new ArrayList<>(hashValueLookup.getOrDefault(hash_value, identifiersOrder));
-            lookup.addAll(identifiersOrder);
+            final ArrayList<Identifier> lookup = new ArrayList<>(this.hashValueLookup.getOrDefault(hash_value, this.identifiersOrder));
+            lookup.addAll(this.identifiersOrder);
             for (final Identifier identifier : lookup) {
                 final WidgetDefinition result = this.getDefinition(identifier);
                 if (result != null) {
@@ -151,8 +151,8 @@ public class WidgetManager {
         public WidgetState getState(@NotNull final AbstractWidget widget, final int hash_offset) {
             final int hash_value = widget.hashCode() + hash_offset;
 
-            final ArrayList<Identifier> lookup = new ArrayList<>(hashValueLookup.getOrDefault(hash_value, identifiersOrder));
-            lookup.addAll(identifiersOrder);
+            final ArrayList<Identifier> lookup = new ArrayList<>(this.hashValueLookup.getOrDefault(hash_value, this.identifiersOrder));
+            lookup.addAll(this.identifiersOrder);
             for (final Identifier identifier : lookup) {
                 final WidgetDefinition definition = this.getDefinition(identifier);
                 if (definition == null) {
