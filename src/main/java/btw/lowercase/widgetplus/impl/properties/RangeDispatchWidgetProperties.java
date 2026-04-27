@@ -1,6 +1,7 @@
 package btw.lowercase.widgetplus.impl.properties;
 
 import btw.lowercase.widgetplus.WidgetPlus;
+import btw.lowercase.widgetplus.impl.properties.range_dispatch.PlayerStats;
 import btw.lowercase.widgetplus.impl.properties.range_dispatch.RangeDispatchWidgetProperty;
 import btw.lowercase.widgetplus.impl.properties.range_dispatch.SliderValue;
 import btw.lowercase.widgetplus.impl.properties.range_dispatch.WorldClockTime;
@@ -18,5 +19,12 @@ public class RangeDispatchWidgetProperties {
     public static void bootstrap() {
         ID_MAPPER.put(WidgetPlus.id("slider/value"), SliderValue.MAP_CODEC);
         ID_MAPPER.put(WidgetPlus.id("world/clock_time"), WorldClockTime.MAP_CODEC);
+        ID_MAPPER.put(WidgetPlus.id("player/health"), PlayerStats.Health.MAP_CODEC);
+        ID_MAPPER.put(WidgetPlus.id("player/hunger"), PlayerStats.Hunger.MAP_CODEC);
+        ID_MAPPER.put(WidgetPlus.id("player/saturation"), PlayerStats.Saturation.MAP_CODEC);
+        ID_MAPPER.put(WidgetPlus.id("player/experience_level"), PlayerStats.ExperienceLevel.MAP_CODEC);
+        ID_MAPPER.put(WidgetPlus.id("player/experience_progress"), PlayerStats.ExperienceProgress.MAP_CODEC);
+        ID_MAPPER.put(WidgetPlus.id("player/oxygen"), PlayerStats.Oxygen.MAP_CODEC);
+        ID_MAPPER.put(WidgetPlus.id("player/hotbar/selected"), PlayerStats.HotbarSelected.MAP_CODEC);
     }
 }

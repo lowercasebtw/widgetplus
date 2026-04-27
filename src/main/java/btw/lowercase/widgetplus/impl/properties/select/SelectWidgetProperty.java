@@ -23,8 +23,10 @@ public interface SelectWidgetProperty<T> {
 
     record Type<P extends SelectWidgetProperty<T>, T>(MapCodec<SelectWidgetEntry.UnbakedSwitch<P, T>> switchCodec) {
         public static <P extends SelectWidgetProperty<T>, T> SelectWidgetProperty.Type<P, T> create(final MapCodec<P> propertyMapCodec, final Codec<T> valueCodec) {
-            final MapCodec<SelectWidgetEntry.UnbakedSwitch<P, T>> switchCodec = RecordCodecBuilder.mapCodec((i) -> i.group(propertyMapCodec.forGetter(SelectWidgetEntry.UnbakedSwitch::property), createCasesFieldCodec(valueCodec).forGetter(SelectWidgetEntry.UnbakedSwitch::cases)).apply(i, SelectWidgetEntry.UnbakedSwitch::new));
-            return new SelectWidgetProperty.Type<>(switchCodec);
+            return new SelectWidgetProperty.Type<>(RecordCodecBuilder.mapCodec(instance -> instance.group(
+                    propertyMapCodec.forGetter(SelectWidgetEntry.UnbakedSwitch::property),
+                    createCasesFieldCodec(valueCodec).forGetter(SelectWidgetEntry.UnbakedSwitch::cases)
+            ).apply(instance, SelectWidgetEntry.UnbakedSwitch::new)));
         }
 
         public static <T> MapCodec<List<SelectWidgetEntry.SwitchCase<T>>> createCasesFieldCodec(final Codec<T> valueCodec) {
@@ -36,12 +38,12 @@ public interface SelectWidgetProperty<T> {
                 return DataResult.error(() -> "Empty case list");
             } else {
                 final Multiset<T> counts = HashMultiset.create();
-                for (final SelectWidgetEntry.SwitchCase<T> c : cases) {
-                    counts.addAll(c.values());
+                for (final SelectWidgetEntry.SwitchCase<T> caze : cases) {
+                    counts.addAll(caze.values());
                 }
 
                 return counts.size() != counts.entrySet().size() ? DataResult.error(() -> {
-                    final Stream<String> var10000 = counts.entrySet().stream().filter((e) -> e.getCount() > 1).map((e) -> e.getElement().toString());
+                    final Stream<String> var10000 = counts.entrySet().stream().filter(entry -> entry.getCount() > 1).map(entry -> entry.getElement().toString());
                     return "Duplicate case conditions: " + var10000.collect(Collectors.joining(", "));
                 }) : DataResult.success(cases);
             }
