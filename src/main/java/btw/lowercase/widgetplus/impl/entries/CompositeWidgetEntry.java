@@ -2,6 +2,7 @@ package btw.lowercase.widgetplus.impl.entries;
 
 import btw.lowercase.widgetplus.impl.WidgetEntries;
 import btw.lowercase.widgetplus.impl.WidgetState;
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -12,7 +13,7 @@ import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public record CompositeWidgetEntry(List<WidgetEntry> widgets) implements WidgetEntry {
+public record CompositeWidgetEntry(List<WidgetEntry> widgets, boolean inherit) implements WidgetEntry {
     @Override
     public WidgetState resolve(final AbstractWidget widget, final @Nullable Screen screen, final @Nullable Player player) {
         final List<WidgetState> states = new ArrayList<>();
@@ -20,12 +21,13 @@ public record CompositeWidgetEntry(List<WidgetEntry> widgets) implements WidgetE
             states.add(entry.resolve(widget, screen, player));
         }
 
-        return new WidgetState.Multiple(states);
+        return new WidgetState.Multiple(states, this.inherit);
     }
 
-    public record Unbaked(List<WidgetEntry.Unbaked> widgets) implements WidgetEntry.Unbaked {
+    public record Unbaked(List<WidgetEntry.Unbaked> widgets, boolean inherit) implements WidgetEntry.Unbaked {
         public static final MapCodec<Unbaked> MAP_CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-                WidgetEntries.CODEC.listOf().fieldOf("widgets").forGetter(Unbaked::widgets)
+                WidgetEntries.CODEC.listOf().fieldOf("widgets").forGetter(Unbaked::widgets),
+                Codec.BOOL.optionalFieldOf("inherit", false).forGetter(Unbaked::inherit)
         ).apply(instance, Unbaked::new));
 
         @Override
@@ -36,7 +38,7 @@ public record CompositeWidgetEntry(List<WidgetEntry> widgets) implements WidgetE
         @Override
         public WidgetEntry bake() {
             if (!this.widgets.isEmpty()) {
-                return this.widgets.size() == 1 ? this.widgets.getFirst().bake() : new CompositeWidgetEntry(this.widgets.stream().map(WidgetEntry.Unbaked::bake).toList());
+                return this.widgets.size() == 1 ? this.widgets.getFirst().bake() : new CompositeWidgetEntry(this.widgets.stream().map(WidgetEntry.Unbaked::bake).toList(), this.inherit);
             } else {
                 return EmptyWidgetEntry.INSTANCE;
             }

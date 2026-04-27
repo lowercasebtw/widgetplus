@@ -15,6 +15,10 @@ public record Bounds(boolean absolute, Optional<Integer> x, Optional<Integer> y,
             Codec.INT.optionalFieldOf("height").forGetter(Bounds::height)
     ).apply(instance, Bounds::new));
 
+    public Bounds(int x, int y, int width, int height) {
+        this(true, x, y, width, height);
+    }
+
     public int getX(final int x) {
         final int ox = this.x.orElse(0);
         return this.absolute ? ox : x + ox;

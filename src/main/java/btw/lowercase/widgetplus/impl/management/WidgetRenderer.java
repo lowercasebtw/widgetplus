@@ -26,8 +26,15 @@ public final class WidgetRenderer {
     }
 
     public static void renderState(final WidgetState state, final WidgetRenderContext renderContext, final Consumer<WidgetRenderContext> defaultRender) {
-        if (state instanceof WidgetState.Multiple(List<WidgetState> states)) {
-            states.forEach(it -> renderState(it, renderContext, defaultRender));
+        if (state instanceof WidgetState.Multiple(List<WidgetState> states, boolean inherit)) {
+            final Bounds originalBounds = new Bounds(renderContext.x(), renderContext.y(), renderContext.width(), renderContext.height());
+            states.forEach(it -> {
+                if (!inherit) {
+                    renderContext.setBounds(originalBounds);
+                }
+
+                renderState(it, renderContext, defaultRender);
+            });
         } else if (state instanceof WidgetState.Sprite(Identifier sprite, Optional<RenderPipeline> pipeline)) {
             renderContext.guiGraphics().blitSprite(pipeline.orElse(renderContext.pipeline()), sprite, renderContext.x(), renderContext.y(), renderContext.width(), renderContext.height(), renderContext.color());
         } else if (state instanceof WidgetState.Texture texture) {
