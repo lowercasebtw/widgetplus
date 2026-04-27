@@ -21,7 +21,7 @@ public interface WidgetState {
         public static final Fallback INSTANCE = new Fallback();
     }
 
-    record Default() implements WidgetState {
-        public static final Default INSTANCE = new Default();
+    record Default(Optional<RenderPipeline> pipeline) implements WidgetState {
+        public static final Default INSTANCE = new Default(Optional.empty());
     }
 }

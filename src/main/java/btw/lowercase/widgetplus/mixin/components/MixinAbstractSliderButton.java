@@ -14,6 +14,8 @@ import net.minecraft.resources.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
+import java.util.function.Consumer;
+
 @Mixin(AbstractSliderButton.class)
 public abstract class MixinAbstractSliderButton extends AbstractWidget.WithInactiveMessage {
     public MixinAbstractSliderButton(final int x, final int y, final int width, final int height, final Component message) {
@@ -22,21 +24,23 @@ public abstract class MixinAbstractSliderButton extends AbstractWidget.WithInact
 
     @WrapOperation(method = "extractWidgetRenderState", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;blitSprite(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIIII)V", ordinal = 0))
     private void widgetplus$blitSliderBackground(final GuiGraphicsExtractor instance, final RenderPipeline renderPipeline, final Identifier location, final int x, final int y, final int width, final int height, final int color, final Operation<Void> original) {
-        final Runnable defaultRender = () -> original.call(instance, renderPipeline, location, x, y, width, height, color);
+        final WidgetRenderer.BlitRenderContext blitRenderContext = new WidgetRenderer.BlitRenderContext(instance, renderPipeline, location, x, y, width, height, color);
+        final Consumer<WidgetRenderer.BlitRenderContext> defaultRender = (renderContext) -> original.call(renderContext.guiGraphicsExtractor(), renderContext.pipeline(), renderContext.location(), renderContext.x(), renderContext.y(), renderContext.width(), renderContext.height(), renderContext.color());
         if (WidgetPlusConfig.instance().enabled) {
-            WidgetRenderer.render(WidgetDefinition.Type.SLIDER, this, new WidgetRenderer.BlitRenderContext(instance, renderPipeline, location, x, y, width, height, color), defaultRender);
+            WidgetRenderer.render(WidgetDefinition.Type.SLIDER, this, blitRenderContext, defaultRender);
         } else {
-            defaultRender.run();
+            defaultRender.accept(blitRenderContext);
         }
     }
 
     @WrapOperation(method = "extractWidgetRenderState", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;blitSprite(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIIII)V", ordinal = 1))
     private void widgetplus$blitSliderButton(final GuiGraphicsExtractor instance, final RenderPipeline renderPipeline, final Identifier location, final int x, final int y, final int width, final int height, final int color, final Operation<Void> original) {
-        final Runnable defaultRender = () -> original.call(instance, renderPipeline, location, x, y, width, height, color);
+        final WidgetRenderer.BlitRenderContext blitRenderContext = new WidgetRenderer.BlitRenderContext(instance, renderPipeline, location, x, y, width, height, color);
+        final Consumer<WidgetRenderer.BlitRenderContext> defaultRender = (renderContext) -> original.call(renderContext.guiGraphicsExtractor(), renderContext.pipeline(), renderContext.location(), renderContext.x(), renderContext.y(), renderContext.width(), renderContext.height(), renderContext.color());
         if (WidgetPlusConfig.instance().enabled) {
-            WidgetRenderer.render(WidgetDefinition.Type.SLIDER_HANDLE, this, new WidgetRenderer.BlitRenderContext(instance, renderPipeline, location, x, y, width, height, color), defaultRender);
+            WidgetRenderer.render(WidgetDefinition.Type.SLIDER_HANDLE, this, blitRenderContext, defaultRender);
         } else {
-            defaultRender.run();
+            defaultRender.accept(blitRenderContext);
         }
     }
 }

@@ -3,13 +3,13 @@ package btw.lowercase.widgetplus.impl.states;
 import btw.lowercase.widgetplus.impl.WidgetState;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.client.gui.components.AbstractWidget;
-import org.jspecify.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 public class FallbackWidgetEntry implements WidgetEntry {
     public static final FallbackWidgetEntry INSTANCE = new FallbackWidgetEntry();
 
     @Override
-    public @Nullable WidgetState resolve(final AbstractWidget widget) {
+    public @NonNull WidgetState resolve(final AbstractWidget widget) {
         return WidgetState.Fallback.INSTANCE;
     }
 

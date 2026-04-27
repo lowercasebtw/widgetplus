@@ -11,21 +11,22 @@ import net.minecraft.util.ARGB;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 public final class WidgetRenderer {
-    public static void render(final WidgetDefinition.Type type, final AbstractWidget widget, final BlitRenderContext renderContext, final Runnable defaultRender) {
+    public static void render(final WidgetDefinition.Type type, final AbstractWidget widget, final BlitRenderContext renderContext, final Consumer<BlitRenderContext> defaultRender) {
         render(WidgetPlus.getWidgetManager().getState(type, widget), renderContext, defaultRender);
     }
 
-    public static void render(final WidgetState state, final BlitRenderContext renderContext, final Runnable defaultRender) {
+    public static void render(final WidgetState state, final BlitRenderContext renderContext, final Consumer<BlitRenderContext> defaultRender) {
         if (state instanceof WidgetState.Multiple(List<WidgetState> states)) {
             for (final WidgetState innerState : states) {
                 render(innerState, renderContext, defaultRender);
             }
         } else if (state instanceof WidgetState.Textured(Identifier texture, Optional<RenderPipeline> pipeline)) {
             renderContext.guiGraphicsExtractor.blitSprite(pipeline.orElse(renderContext.pipeline), texture, renderContext.x, renderContext.y, renderContext.width, renderContext.height, renderContext.color);
-        } else if (state instanceof WidgetState.Default) {
-            defaultRender.run();
+        } else if (state instanceof WidgetState.Default(Optional<RenderPipeline> pipeline)) {
+            defaultRender.accept(pipeline.map(renderContext::withPipeline).orElse(renderContext));
         }
     }
 
@@ -45,6 +46,10 @@ public final class WidgetRenderer {
                 final int height
         ) {
             this(guiGraphicsExtractor, pipeline, location, x, y, width, height, ARGB.white(1.0F));
+        }
+
+        public BlitRenderContext withPipeline(final RenderPipeline pipeline) {
+            return new BlitRenderContext(this.guiGraphicsExtractor, pipeline, this.location, this.x, this.y, this.width, this.height);
         }
     }
 }
