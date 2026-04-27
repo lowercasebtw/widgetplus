@@ -5,8 +5,18 @@ import net.minecraft.resources.Identifier;
 
 import java.util.Optional;
 
-public record WidgetState(Identifier texture, Optional<RenderPipeline> pipeline) {
-    public WidgetState(final Identifier texture) {
-        this(texture, Optional.empty());
+public interface WidgetState {
+    record Textured(Identifier texture, Optional<RenderPipeline> pipeline) implements WidgetState {
+        public Textured(final Identifier texture) {
+            this(texture, Optional.empty());
+        }
+    }
+
+    record Default() implements WidgetState {
+        public static final Default INSTANCE = new Default();
+    }
+
+    record Empty() implements WidgetState {
+        public static final Empty INSTANCE = new Empty();
     }
 }

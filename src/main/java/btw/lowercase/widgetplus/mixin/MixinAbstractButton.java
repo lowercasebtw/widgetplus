@@ -15,6 +15,8 @@ import net.minecraft.resources.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
+import java.util.Optional;
+
 @Mixin(AbstractButton.class)
 public abstract class MixinAbstractButton extends AbstractWidget.WithInactiveMessage {
     public MixinAbstractButton(final int x, final int y, final int width, final int height, final Component message) {
@@ -25,11 +27,13 @@ public abstract class MixinAbstractButton extends AbstractWidget.WithInactiveMes
     private void widgetplus$blitButton(final GuiGraphicsExtractor instance, final RenderPipeline renderPipeline, final Identifier location, final int x, final int y, final int width, final int height, final int color, final Operation<Void> original) {
         if (WidgetPlusConfig.instance().enabled) {
             final WidgetState state = WidgetPlus.getWidgetManager().getState(WidgetDefinition.Type.BUTTON, this);
-            if (state != null) {
-                original.call(instance, state.pipeline().orElse(renderPipeline), state.texture(), x, y, width, height, color);
+            if (state instanceof WidgetState.Textured(Identifier texture, Optional<RenderPipeline> pipeline)) {
+                original.call(instance, pipeline.orElse(renderPipeline), texture, x, y, width, height, color);
             }
 
-            return; // Empty
+            if (state instanceof WidgetState.Empty) {
+                return;
+            }
         }
 
         original.call(instance, renderPipeline, location, x, y, width, height, color);

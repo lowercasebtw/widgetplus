@@ -18,7 +18,7 @@ public record TextureWidgetEntry(Identifier texture,
                                  Optional<RenderPipeline> pipeline) implements WidgetEntry {
     @Override
     public WidgetState resolve(final AbstractWidget widget) {
-        return new WidgetState(this.texture, this.pipeline);
+        return new WidgetState.Textured(this.texture, this.pipeline);
     }
 
     public record Unbaked(Identifier texture,

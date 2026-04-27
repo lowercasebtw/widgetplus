@@ -5,12 +5,12 @@ import com.mojang.serialization.MapCodec;
 import net.minecraft.client.gui.components.AbstractWidget;
 import org.jspecify.annotations.Nullable;
 
-public class EmptyWidgetEntry implements WidgetEntry {
-    private static final EmptyWidgetEntry INSTANCE = new EmptyWidgetEntry();
+public class DefaultWidgetEntry implements WidgetEntry {
+    private static final DefaultWidgetEntry INSTANCE = new DefaultWidgetEntry();
 
     @Override
     public @Nullable WidgetState resolve(final AbstractWidget widget) {
-        return WidgetState.Empty.INSTANCE;
+        return WidgetState.Default.INSTANCE;
     }
 
     public record Unbaked() implements WidgetEntry.Unbaked {
