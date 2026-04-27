@@ -1,10 +1,10 @@
 package btw.lowercase.widgetplus.mixin;
 
 import btw.lowercase.widgetplus.impl.WidgetEntries;
+import btw.lowercase.widgetplus.impl.entries.primitive.PrimitiveTypes;
 import btw.lowercase.widgetplus.impl.properties.ConditionalWidgetProperties;
 import btw.lowercase.widgetplus.impl.properties.RangeDispatchWidgetProperties;
 import btw.lowercase.widgetplus.impl.properties.SelectWidgetProperties;
-import btw.lowercase.widgetplus.impl.entries.primitive.PrimitiveTypes;
 import net.minecraft.client.ClientBootstrap;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

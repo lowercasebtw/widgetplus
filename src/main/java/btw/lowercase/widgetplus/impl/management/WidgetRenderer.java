@@ -59,7 +59,6 @@ public final class WidgetRenderer {
                 uv.v1(),
                 ARGB.white(1.0F)
         );
-
     }
 
     public static void renderPrimitive(final WidgetState.Primitive primitive, final WidgetRenderContext renderContext) {
