@@ -1,0 +1,228 @@
+use ::java::util::color::StringARGB
+use ::java::util::text::Text
+
+dispatch minecraft:resource[widgetplus:widget_definition] to struct WidgetDefinition {
+    target: Target,
+    widget: Widget
+}
+
+struct Target {
+    type: TargetType,
+    hash_code?: int
+}
+
+struct PipelineOverrides {
+    vertex?: #[id="shader/vertex"] string,
+    fragment?: #[id="shader/fragment"] string,
+    color_target?: ColorTargetStateCodec
+}
+
+enum(string) BlendSourceFactor {
+    constant_alpha = "constant_alpha",
+    constant_color = "constant_color",
+    dst_alpha = "dst_alpha",
+    dst_color = "dst_color",
+    one = "one",
+    one_minus_constant_alpha = "one_minus_constant_alpha",
+    one_minus_constant_color = "one_minus_constant_color",
+    one_minus_dst_alpha = "one_minus_dst_alpha",
+    one_minus_dst_color = "one_minus_dst_color",
+    one_minus_src_alpha = "one_minus_src_alpha",
+    one_minus_src_color = "one_minus_src_color",
+    src_alpha = "src_alpha",
+    src_alpha_saturate = "src_alpha_saturate",
+    src_color = "src_color",
+    zero = "zero"
+}
+
+enum(string) BlendDestFactor {
+    constant_alpha = "constant_alpha",
+    constant_color = "constant_color",
+    dst_alpha = "dst_alpha",
+    dst_color = "dst_color",
+    one = "one",
+    one_minus_constant_alpha = "one_minus_constant_alpha",
+    one_minus_constant_color = "one_minus_constant_color",
+    one_minus_dst_alpha = "one_minus_dst_alpha",
+    one_minus_dst_color = "one_minus_dst_color",
+    one_minus_src_alpha = "one_minus_src_alpha",
+    one_minus_src_color = "one_minus_src_color",
+    src_alpha = "src_alpha",
+    src_color = "src_color",
+    zero = "zero"
+}
+
+struct ColorTargetStateCodec {
+    blend?: struct {
+        src_color: BlendSourceFactor,
+        dest_color: BlendDestFactor,
+        src_alpha?: BlendSourceFactor,
+        dest_alpha?: BlendDestFactor,
+    },
+    write_mask?: struct WriteMaskCodec {
+        red?: boolean,
+        green?: boolean,
+        blue?: boolean,
+        alpha?: boolean
+    }
+}
+
+struct Widget {
+    type: #[id] WidgetType,
+    ...widgetplus:widget_definition[[type]]
+}
+
+enum(string) TargetType {
+    Button = "button",
+    Slider = "slider",
+    SliderHandle = "slider_handle",
+    Scrollbar = "scrollbar",
+    ScrollbarKnob = "scrollbar_knob",
+    EditBox = "edit_box",
+    Checkbox = "checkbox",
+}
+
+enum(string) WidgetType {
+    /// Omits rendering.
+    Empty = "empty",
+    /// Uses the default widget rendering
+    Default = "default",
+    /// Omits the rendering and goes on to the next.
+    Fallback = "fallback",
+    Texture = "texture",
+    Sprite = "sprite",
+    Primitive = "primitive",
+    Custom = "custom",
+    Composite = "composite",
+    RangeDispatch = "range_dispatch",
+    Select = "select",
+    Condition = "condition"
+}
+
+dispatch widgetplus:widget_definition[texture] to struct Texture {
+    texture: #[id="texture"] string,
+    uv?: struct UvCoordinates {
+        u0: float @ 0..1,
+        u1: float @ 0..1,
+        v0: float @ 0..1,
+        v1: float @ 0..1
+    },
+    bounds?: Bounds,
+    pipeline_overrides?: PipelineOverrides
+}
+
+dispatch widgetplus:widget_definition[sprite] to struct Sprite {
+    sprite: #[id(registry="texture",path="gui/sprites/")] string,
+    pipeline_overrides?: PipelineOverrides
+}
+
+dispatch widgetplus:widget_definition[empty] to struct {}
+dispatch widgetplus:widget_definition[default] to struct {}
+dispatch widgetplus:widget_definition[fallback] to struct {}
+
+dispatch widgetplus:widget_definition[primitive] to struct {
+    function: #[id] PrimitiveFunctionType,
+    ...widgetplus:primitive_function[[type]]
+}
+
+dispatch widgetplus:widget_definition[custom] to struct Custom {
+    widget: Widget,
+    bounds?: Bounds
+}
+
+dispatch widgetplus:widget_definition[composite] to struct Composite {
+    widgets: [Widget]
+}
+
+dispatch widgetplus:widget_definition[range_dispatch] to struct RangeDispatch {
+    property: RangeDispatchProperty,
+    ...widgetplus:range_dispatch[[property]]
+}
+
+type When = (
+    Text | 
+    #[id] string | 
+    ("minecraft:overworld" | "overworld" | "minecraft:the_nether" | "the_nether" | "minecraft:the_end" | "the_end") |
+    ("fast" | "fancy" | "fabulous" | "custon") |
+    ("clear" | "rain" | "thunder")
+)
+
+dispatch widgetplus:widget_definition[select] to struct Select {
+    property: SelectProperty,
+    cases: [struct {
+        when: (When | [When]),
+        widget: Widget
+    }],
+    fallback: Widget
+}
+
+dispatch widgetplus:range_dispatch["slider/value"] to struct {}
+dispatch widgetplus:range_dispatch["world/clock_time"] to struct {
+    clock?: (WorldClock | #[id] string)
+}
+dispatch widgetplus:range_dispatch["player/health"] to struct { normalize?: boolean }
+dispatch widgetplus:range_dispatch["player/hunger"] to struct {}
+dispatch widgetplus:range_dispatch["player/saturation"] to struct {}
+dispatch widgetplus:range_dispatch["player/experience_level"] to struct {}
+dispatch widgetplus:range_dispatch["player/experience_progress"] to struct {}
+dispatch widgetplus:range_dispatch["player/oxygen"] to struct { normalize?: boolean }
+dispatch widgetplus:range_dispatch["player/hotbar/selected"] to struct { }
+
+enum(string) SelectProperty {
+   Message = "message",
+   ActiveScreen = "active_screen",
+   GraphicsPreset = "options/graphics_preset",
+   EditBoxContents = "editbox/contents",
+   ServerAddress = "server/address",
+   ServerMOTD = "server/motd",
+   Dimension = "world/dimension",
+   Weather = "world/weather"
+}
+
+enum(string) WorldClock {
+    Overworld = "overworld",
+    TheEnd = "the_end"
+}
+
+enum(string) RangeDispatchProperty {
+    SliderValue = "slider/value", 
+    WorldClockTime = "world/clock_time", 
+    PlayerHealth = "player/health", 
+    PlayerHunger = "player/hunger", 
+    PlayerSaturation = "player/saturation", 
+    PlayerExperienceLevel = "player/experience_level", 
+    PlayerExperienceProgress = "player/experience_progress", 
+    PlayerOxygen = "player/oxygen", 
+    PlayerHotbarSelected = "player/hotbar/selected"
+}
+
+struct Bounds {
+    absolute?: boolean,
+    x?: int,
+    y?: int,
+    width?: int,
+    height?: int
+}
+
+enum(string) PrimitiveFunctionType {
+    fill = "fill",
+    fill_gradient = "fill_gradient",
+    outline = "outline"
+}
+
+dispatch widgetplus:primitive_function[fill] to struct PrimitiveFunctionFill {
+    color: StringARGB,
+    pipeline_overrides?: PipelineOverrides
+}
+
+dispatch widgetplus:primitive_function[fill_gradient] to struct PrimitiveFunctionFillGradient {
+    start_color: StringARGB,
+    end_color: StringARGB,
+    pipeline_overrides?: PipelineOverrides
+}
+
+dispatch widgetplus:primitive_function[outline] to struct PrimitiveFunctionOutline {
+    color: StringARGB,
+    width: float,
+    pipeline_overrides?: PipelineOverrides
+}
