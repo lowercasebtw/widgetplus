@@ -1,5 +1,6 @@
 package btw.lowercase.widgetplus.impl.properties.select;
 
+import btw.lowercase.widgetplus.impl.util.Utils;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.client.Minecraft;
@@ -16,11 +17,10 @@ public record ServerAddress() implements SelectWidgetProperty<String> {
 
     @Override
     public @Nullable String get(final AbstractWidget widget, @Nullable final Screen screen, @Nullable final Player player) {
-        final Minecraft minecraft = Minecraft.getInstance();
-        if (minecraft.isSingleplayer()) {
+        if (Utils.isSingleplayer()) {
             return "singleplayer";
         } else {
-            final ServerData serverData = minecraft.getCurrentServer();
+            final ServerData serverData = Minecraft.getInstance().getCurrentServer();
             return serverData != null ? serverData.ip : null;
         }
     }

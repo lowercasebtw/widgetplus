@@ -6,6 +6,7 @@
 		"MixinClientBootstrap",
 		"MixinFramerateLimitTracker_UncapUIFPS",
 		"MixinMinecraft",
+		"MixinMinecraft_ResetFrame",
 		"MixinRenderPipeline$Builder",
 		"MixinRenderSystem",
 		"components.AbstractSliderButtonAccessor",
