@@ -22,7 +22,7 @@ public abstract class MixinRenderPipeline$Builder {
 
     @Inject(method = "withBindGroupLayout", at = @At("HEAD"))
     private void widgetplus$setUniform(final BindGroupLayout bindGroupLayout, final CallbackInfoReturnable<RenderPipeline.Builder> cir) {
-        if (BindGroupLayouts.GLOBALS.equals(bindGroupLayout)) {
+        if (BindGroupLayouts.DYNAMIC_TRANSFORMS.equals(bindGroupLayout)) {
             this.withBindGroupLayout(BindGroupLayout.builder().withUniform("WPData", UniformType.UNIFORM_BUFFER).build());
         }
     }
