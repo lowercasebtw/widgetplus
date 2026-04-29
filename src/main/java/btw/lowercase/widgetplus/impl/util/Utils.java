@@ -3,15 +3,23 @@ package btw.lowercase.widgetplus.impl.util;
 import btw.lowercase.widgetplus.WidgetPlus;
 import com.mojang.blaze3d.pipeline.BlendFunction;
 import com.mojang.blaze3d.pipeline.ColorTargetState;
-import com.mojang.blaze3d.platform.DestFactor;
-import com.mojang.blaze3d.platform.SourceFactor;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.IdentifierException;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.toasts.ToastManager;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.resources.Identifier;
 
 import java.util.Optional;
+
+//? >=26.2 {
+/*import com.mojang.blaze3d.platform.BlendFactor;
+*///? } else {
+import com.mojang.blaze3d.platform.DestFactor;
+import com.mojang.blaze3d.platform.SourceFactor;
+//? }
 
 public final class Utils {
     public static final Codec<Identifier> IDENTIFIER_CODEC = Codec.STRING.comapFlatMap(input -> {
@@ -22,16 +30,31 @@ public final class Utils {
         }
     }, Identifier::toString).stable();
 
+    // TODO/NOTE: Find a more convenient way?
     public static final Codec<BlendFunction> BLEND_FUNCTION_CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            //? >=26.2 {
+            /*Codec.STRING.fieldOf("src_color").forGetter(blend -> blend.color().sourceFactor().toString()),
+            Codec.STRING.fieldOf("dest_color").forGetter(blend -> blend.color().destFactor().toString()),
+            Codec.STRING.optionalFieldOf("src_alpha").forGetter(blend -> Optional.of(blend.alpha().sourceFactor().toString())),
+            Codec.STRING.optionalFieldOf("dest_alpha").forGetter(blend -> Optional.of(blend.alpha().destFactor().toString()))
+            *///? } else {
             Codec.STRING.fieldOf("src_color").forGetter(blend -> blend.sourceColor().toString()),
             Codec.STRING.fieldOf("dest_color").forGetter(blend -> blend.destColor().toString()),
             Codec.STRING.optionalFieldOf("src_alpha").forGetter(blend -> Optional.of(blend.sourceAlpha().toString())),
             Codec.STRING.optionalFieldOf("dest_alpha").forGetter(blend -> Optional.of(blend.destAlpha().toString()))
+            //? }
     ).apply(instance, (srcColor, dstColor, srcAlpha, dstAlpha) -> new BlendFunction(
+            //? >=26.2 {
+            /*factorOf(srcColor),
+            factorOf(dstColor),
+            factorOf(srcAlpha.orElse(srcColor)),
+            factorOf(dstAlpha.orElse(dstColor))
+            *///? } else {
             sourceFactorOf(srcColor),
             destFactorOf(dstColor),
             sourceFactorOf(srcAlpha.orElse(srcColor)),
             destFactorOf(dstAlpha.orElse(dstColor))
+            //? }
     )));
 
     public static final Codec<Integer> WRITE_MASK_CODEC = RecordCodecBuilder.create(instance -> instance.group(
@@ -65,6 +88,29 @@ public final class Utils {
             WRITE_MASK_CODEC.optionalFieldOf("write_mask", ColorTargetState.WRITE_ALL).forGetter(ColorTargetState::writeMask)
     ).apply(instance, ColorTargetState::new));
 
+    // TODO/NOTE: Find a more convenient way?
+    //? >=26.2 {
+    /*private static BlendFactor factorOf(final String name) {
+        return switch (name) {
+            case "constant_alpha" -> BlendFactor.CONSTANT_ALPHA;
+            case "constant_color" -> BlendFactor.CONSTANT_COLOR;
+            case "dst_alpha" -> BlendFactor.DST_ALPHA;
+            case "dst_color" -> BlendFactor.DST_COLOR;
+            case "one" -> BlendFactor.ONE;
+            case "one_minus_constant_alpha" -> BlendFactor.ONE_MINUS_CONSTANT_ALPHA;
+            case "one_minus_constant_color" -> BlendFactor.ONE_MINUS_CONSTANT_COLOR;
+            case "one_minus_dst_alpha" -> BlendFactor.ONE_MINUS_DST_ALPHA;
+            case "one_minus_dst_color" -> BlendFactor.ONE_MINUS_DST_COLOR;
+            case "one_minus_src_alpha" -> BlendFactor.ONE_MINUS_SRC_ALPHA;
+            case "one_minus_src_color" -> BlendFactor.ONE_MINUS_SRC_COLOR;
+            case "src_alpha" -> BlendFactor.SRC_ALPHA;
+            case "src_alpha_saturate" -> BlendFactor.SRC_ALPHA_SATURATE;
+            case "src_color" -> BlendFactor.SRC_COLOR;
+            case "zero" -> BlendFactor.ZERO;
+            default -> BlendFactor.ONE; // OpenGL default
+        };
+    }
+    *///? } else {
     private static SourceFactor sourceFactorOf(final String name) {
         return switch (name) {
             case "constant_alpha" -> SourceFactor.CONSTANT_ALPHA;
@@ -104,5 +150,35 @@ public final class Utils {
             case "zero" -> DestFactor.ZERO;
             default -> DestFactor.ZERO; // OpenGL default
         };
+    }
+    //? }
+
+    // Version Specific Helpers
+    public static Screen getScreen() {
+        final Minecraft minecraft = Minecraft.getInstance();
+        //? >=26.2 {
+        /*return minecraft.gui.screen();
+        *///? } else {
+        return minecraft.screen;
+         //? }
+    }
+
+    public static ToastManager getToastManager() {
+        final Minecraft minecraft = Minecraft.getInstance();
+        //? >=26.2 {
+        /*return minecraft.gui.toastManager();
+        *///? } else {
+        return minecraft.getToastManager();
+        //? }
+    }
+
+    public static boolean isSingleplayer() {
+        final Minecraft minecraft = Minecraft.getInstance();
+        //? >=26.2 {
+        /*//noinspection DataFlowIssue
+        return minecraft.hasSingleplayerServer() && !minecraft.getSingleplayerServer().isPublished();
+        *///? } else {
+        return minecraft.isSingleplayer();
+        //? }
     }
 }

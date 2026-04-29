@@ -1,5 +1,6 @@
 package btw.lowercase.widgetplus.impl.properties.select;
 
+import btw.lowercase.widgetplus.impl.util.Utils;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.client.Minecraft;
@@ -19,9 +20,12 @@ public record ServerMOTD() implements SelectWidgetProperty<Component> {
 
     @Override
     public @NonNull Component get(final AbstractWidget widget, @Nullable final Screen screen, @Nullable final Player player) {
-        final Minecraft minecraft = Minecraft.getInstance();
-        final ServerData serverData = minecraft.getCurrentServer();
-        return !minecraft.isSingleplayer() && serverData != null ? serverData.motd : Component.empty();
+        final ServerData serverData = Minecraft.getInstance().getCurrentServer();
+        if (!Utils.isSingleplayer() && serverData != null) {
+            return serverData.motd;
+        } else {
+            return Component.empty();
+        }
     }
 
     @Override

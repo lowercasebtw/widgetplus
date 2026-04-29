@@ -4,7 +4,6 @@ import btw.lowercase.widgetplus.WidgetPlus;
 import btw.lowercase.widgetplus.config.WidgetPlusConfig;
 import btw.lowercase.widgetplus.impl.management.WidgetPlusDynamicUniforms;
 import btw.lowercase.widgetplus.impl.util.ElapsedTimes;
-import com.mojang.blaze3d.TracyFrameCapture;
 import com.mojang.blaze3d.buffers.GpuBufferSlice;
 import com.mojang.blaze3d.systems.GpuDevice;
 import com.mojang.blaze3d.systems.RenderPass;
@@ -29,13 +28,15 @@ public abstract class MixinRenderSystem {
         WidgetPlus.initUniform();
     }
 
+    //? <=26.1 {
     @Inject(method = "flipFrame", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/DynamicUniforms;reset()V", shift = At.Shift.AFTER))
-    private static void widgetplus$resetUniforms(final TracyFrameCapture tracyFrameCapture, final CallbackInfo ci) {
+    private static void widgetplus$resetUniforms(final com.mojang.blaze3d.TracyFrameCapture tracyFrameCapture, final CallbackInfo ci) {
         final WidgetPlusDynamicUniforms dynamicUniforms = WidgetPlus.dynamicUniforms();
         if (WidgetPlusConfig.instance().enabled && dynamicUniforms != null) {
             dynamicUniforms.reset();
         }
     }
+    //? }
 
     @Inject(method = "getDynamicUniforms", at = @At("HEAD"))
     private static void widgetplus$setupUbo(final CallbackInfoReturnable<DynamicUniforms> cir) {
@@ -44,7 +45,12 @@ public abstract class MixinRenderSystem {
             final Minecraft minecraft = Minecraft.getInstance();
             final double mouseX = minecraft.mouseHandler.xpos();
             final double mouseY = minecraft.mouseHandler.ypos();
-            final ElapsedTimes elapsedTimes = ((ElapsedTimes) minecraft);
+            final ElapsedTimes elapsedTimes =
+                    //? >=26.2 {
+                    /*((ElapsedTimes) minecraft.gui);
+                    *///? } else {
+                    ((ElapsedTimes) minecraft);
+                     //? }
             widgetplus$dynamicUniforms = dynamicUniforms.write(
                     new Vector2d(mouseX, mouseY),
                     elapsedTimes.widgetplus$getElapsedPauseTime(),

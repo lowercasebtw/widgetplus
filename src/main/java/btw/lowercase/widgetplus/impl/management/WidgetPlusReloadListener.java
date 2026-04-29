@@ -2,10 +2,10 @@ package btw.lowercase.widgetplus.impl.management;
 
 import btw.lowercase.widgetplus.WidgetPlus;
 import btw.lowercase.widgetplus.impl.WidgetDefinition;
+import btw.lowercase.widgetplus.impl.util.Utils;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mojang.serialization.JsonOps;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.toasts.SystemToast;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -56,7 +56,7 @@ public class WidgetPlusReloadListener implements PreparableReloadListener {
             final int finalErrorCount = error.intValue();
             if (finalErrorCount != 0) {
                 final String errorTitle = (finalErrorCount > 1) ? "widgetplus.info.errorPlural" : "widgetplus.info.errorSingular";
-                SystemToast.addOrUpdate(Minecraft.getInstance().getToastManager(), SystemToast.SystemToastId.PACK_LOAD_FAILURE, Component.translatable(errorTitle, error.intValue()), Component.translatable("widgetplus.info.checkLogs"));
+                SystemToast.addOrUpdate(Utils.getToastManager(), SystemToast.SystemToastId.PACK_LOAD_FAILURE, Component.translatable(errorTitle, error.intValue()), Component.translatable("widgetplus.info.checkLogs"));
             }
         }).thenCompose(preparationBarrier::wait);
     }
