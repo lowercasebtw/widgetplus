@@ -27,10 +27,6 @@ public interface WidgetState {
     record Custom(WidgetState state, Optional<Bounds> bounds) implements WidgetState {
     }
 
-    // TODO: Implement usage
-    record Reference(Identifier id) implements WidgetState {
-    }
-
     record Empty() implements WidgetState {
         public static final Empty INSTANCE = new Empty();
     }
