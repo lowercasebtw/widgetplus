@@ -42,6 +42,8 @@ public final class WidgetRenderer {
             renderTexture(texture, renderContext);
         } else if (state instanceof WidgetState.Primitive primitive) {
             renderPrimitive(primitive, renderContext);
+        } else if (state instanceof WidgetState.Item(ItemBlockRenderer.Item item)) {
+            ItemBlockRenderer.render(renderContext, item);
         } else if (state instanceof WidgetState.Custom(WidgetState customState, Optional<Bounds> bounds)) {
             bounds.ifPresent(renderContext::setBounds);
             renderState(customState, renderContext, defaultRender);
