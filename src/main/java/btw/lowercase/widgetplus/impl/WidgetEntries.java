@@ -20,7 +20,6 @@ public class WidgetEntries {
         ID_MAPPER.put(WidgetPlus.id("texture"), TextureWidgetEntry.Unbaked.MAP_CODEC);
         ID_MAPPER.put(WidgetPlus.id("primitive"), PrimitiveWidgetEntry.Unbaked.MAP_CODEC);
         ID_MAPPER.put(WidgetPlus.id("custom"), CustomWidgetEntry.Unbaked.MAP_CODEC);
-        ID_MAPPER.put(WidgetPlus.id("reference"), ReferenceWidgetEntry.Unbaked.MAP_CODEC);
         ID_MAPPER.put(WidgetPlus.id("composite"), CompositeWidgetEntry.Unbaked.MAP_CODEC);
         ID_MAPPER.put(WidgetPlus.id("range_dispatch"), RangeDispatchWidgetEntry.Unbaked.MAP_CODEC);
         ID_MAPPER.put(WidgetPlus.id("select"), SelectWidgetEntry.Unbaked.MAP_CODEC);

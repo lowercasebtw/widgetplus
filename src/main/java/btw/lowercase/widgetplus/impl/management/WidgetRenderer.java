@@ -22,7 +22,8 @@ import java.util.function.Consumer;
 
 public final class WidgetRenderer {
     public static void renderDefinition(final WidgetDefinition.Type type, final AbstractWidget widget, final WidgetRenderContext renderContext, final Consumer<WidgetRenderContext> defaultRender) {
-        renderState(WidgetPlus.getWidgetManager().getState(type, widget), renderContext, defaultRender);
+        final WidgetState state = WidgetPlus.getWidgetManager().getState(type, widget);
+        renderState(state, renderContext, defaultRender);
     }
 
     public static void renderState(final WidgetState state, final WidgetRenderContext renderContext, final Consumer<WidgetRenderContext> defaultRender) {
