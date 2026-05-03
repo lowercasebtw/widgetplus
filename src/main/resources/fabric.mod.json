@@ -1,14 +1,19 @@
 {
 	"schemaVersion": 1,
-	"id": "widgetplus",
+	"id": "${id}",
 	"version": "${version}",
-	"name": "Widget Plus",
-	"description": "Contextual based widget texture rendering based off the vanilla items system.",
+	"name": "${name}",
+	"description": "${description}",
 	"authors": [
 		"lowercasebtw",
 		"mineland"
 	],
-	"license": "GPL-3.0-with-linking-exception",
+	"contact": {
+		"sources": "${source}",
+		"issues": "${issues}"
+	},
+	"license": "${license}",
+	"icon": "assets/${id}/icon.png",
 	"environment": "client",
 	"entrypoints": {
 		"client": [
@@ -19,11 +24,22 @@
 		]
 	},
 	"mixins": [
-		"widgetplus.mixins.json"
+		"${id}.mixins.json"
 	],
 	"depends": {
-		"fabricloader": ">=0.19.2",
-		"minecraft": "~26.1.2",
-		"yet_another_config_lib_v3": "*"
+		"fabricloader": ">=${fabric_loader_version}",
+		"minecraft": "${minecraft_version_range}",
+		"fabric-api": ">=${fabric_api_version}",
+		"yet_another_config_lib_v3": "${yacl_version}"
+	},
+	"custom": {
+		"modmenu": {
+			"links": {
+				"modmenu.discord": "${discord}",
+				"modmenu.modrinth": "${modrinth}",
+				"modmenu.curseforge": "${curseforge}"
+			},
+			"update_checker": true
+		}
 	}
 }

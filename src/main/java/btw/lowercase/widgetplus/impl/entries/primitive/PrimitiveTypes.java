@@ -14,6 +14,5 @@ public class PrimitiveTypes {
         ID_MAPPER.put("fill", Fill.MAP_CODEC);
         ID_MAPPER.put("fill_gradient", FillGradient.MAP_CODEC);
         ID_MAPPER.put("outline", Outline.MAP_CODEC);
-        ID_MAPPER.put("outline_gradient", OutlineGradient.MAP_CODEC);
     }
 }

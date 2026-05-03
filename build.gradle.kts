@@ -1,74 +1,166 @@
 plugins {
-    id("net.fabricmc.fabric-loom")
-    `maven-publish`
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.loom)
+    alias(libs.plugins.blossom)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.fletchingtable.fabric)
+    id("maven-publish")
 }
 
-version = providers.gradleProperty("mod_version").get()
-group = providers.gradleProperty("maven_group").get()
+class ModData {
+    val id = property("mod.id") as String
+    val name = property("mod.name") as String
+    val version = property("mod.version") as String
+    val group = property("mod.group") as String
+    val description = property("mod.description") as String
+    val source = property("mod.source") as String
+    val issues = property("mod.issues") as String
+    val license = property("mod.license") as String
+    val modrinth = property("mod.modrinth") as String
+    val curseforge = property("mod.curseforge") as String
+    val discord = property("mod.discord") as String
+    val minecraftVersion = property("mod.minecraft_version") as String
+    val minecraftVersionRange = property("mod.minecraft_version_range") as String
+}
+
+class Dependencies {
+    val fabricLoaderVersion = property("deps.fabric_loader_version") as String
+    val devAuthVersion = property("deps.devauth_version") as String
+
+    // Versioned
+    val fabricApiVersion = property("deps.fabric_api_version") as String
+    val modmenuVersion = property("deps.modmenu_version") as String
+    val yaclVersion = property("deps.yacl_version") as String
+}
+
+val mod = ModData()
+val deps = Dependencies()
+
+val versionString = "${mod.version}-${mod.minecraftVersion}_fabric"
+group = mod.group
+base {
+    archivesName.set("${mod.id}-${versionString}")
+}
 
 loom {
-    runs {
-        runConfigs.remove(runConfigs["server"])
+    runConfigs.remove(runConfigs["server"]) // Removes server run configs
+    runConfigs.all {
+        ideConfigGenerated(stonecutter.current.isActive)
+        runDir = "../../run"
     }
 
-    accessWidenerPath = file("src/main/resources/widgetplus.accesswidener")
+    accessWidenerPath = stonecutter.process(
+        rootProject.file("src/main/resources/${mod.id}.accesswidener"),
+        "build/processed.accesswidener"
+    )
+
+    runs {
+        afterEvaluate {
+            configureEach {
+                property("devauth.enabled", "true")
+                property("devauth.account", "main")
+            }
+        }
+    }
+}
+
+fletchingTable {
+    lang.create("main") {
+        patterns.add("assets/${mod.id}/lang/**")
+    }
 }
 
 repositories {
     mavenCentral()
     mavenLocal()
     maven("https://pkgs.dev.azure.com/djtheredstoner/DevAuth/_packaging/public/maven/v1") // DevAuth
-    maven("https://maven.terraformersmc.com") // Mod Menu
+    maven("https://maven.terraformersmc.com/") // Mod Menu
     maven("https://maven.isxander.dev/releases") // YACL
 }
 
 dependencies {
-    minecraft("com.mojang:minecraft:${providers.gradleProperty("minecraft_version").get()}")
-    implementation("net.fabricmc:fabric-loader:${providers.gradleProperty("loader_version").get()}")
+    minecraft("com.mojang:minecraft:${mod.minecraftVersion}")
+    implementation("net.fabricmc:fabric-loader:${deps.fabricLoaderVersion}")
 
-    implementation("dev.isxander:yet-another-config-lib:${providers.gradleProperty("yacl_version").get()}-fabric")
-    implementation("com.terraformersmc:modmenu:${providers.gradleProperty("modmenu_version").get()}")
+    implementation("net.fabricmc.fabric-api:fabric-api:${deps.fabricApiVersion}")
+    implementation("dev.isxander:yet-another-config-lib:${deps.yaclVersion}-fabric")
+    implementation("com.terraformersmc:modmenu:${deps.modmenuVersion}")
 
-    localRuntime("me.djtheredstoner:DevAuth-fabric:${providers.gradleProperty("devauth_version").get()}")
-}
-
-tasks.processResources {
-    inputs.property("version", version)
-    filesMatching("fabric.mod.json") {
-        expand("version" to version)
-    }
-}
-
-tasks.withType<JavaCompile>().configureEach {
-    options.release = 25
+    localRuntime("me.djtheredstoner:DevAuth-fabric:${deps.devAuthVersion}")
 }
 
 java {
+    val requiredJava = JavaVersion.VERSION_25
+    sourceCompatibility = requiredJava
+    targetCompatibility = requiredJava
     withSourcesJar()
-    sourceCompatibility = JavaVersion.VERSION_25
-    targetCompatibility = JavaVersion.VERSION_25
 }
 
-tasks.jar {
-    inputs.property("projectName", project.name)
-    from("LICENSE") {
-        rename { "${it}_${project.name}" }
-    }
-}
+tasks {
+    processResources {
+        val props = buildMap {
+            put("id", mod.id)
+            put("name", mod.name)
+            put("version", mod.version)
+            put("description", mod.description)
+            put("source", mod.source)
+            put("issues", mod.issues)
+            put("license", mod.license)
+            put("modrinth", mod.modrinth)
+            put("curseforge", mod.curseforge)
+            put("discord", mod.discord)
 
-// configure the maven publication
-publishing {
-    publications {
-        register<MavenPublication>("mavenJava") {
-            from(components["java"])
+            val minecraftVersionRange = if (mod.minecraftVersionRange.contains(' ')) {
+                val parts = mod.minecraftVersionRange.trim().split(' ')
+                ">=" + parts.first() + ' ' + "<=" + parts.last()
+            } else {
+                mod.minecraftVersionRange
+            }
+
+            put("minecraft_version_range", minecraftVersionRange)
+            put("fabric_loader_version", deps.fabricLoaderVersion.trim())
+            put("fabric_api_version", deps.fabricApiVersion.trim())
+            put("yacl_version", deps.yaclVersion)
         }
+
+        props.forEach(inputs::property)
+        filesMatching("**/lang/en_us.json") { // Defaults description to English translation
+            expand(props)
+            filteringCharset = "UTF-8"
+        }
+
+        filesMatching("fabric.mod.json") { expand(props) }
     }
 
-    // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
-    repositories {
-        // Add repositories to publish to here.
-        // Notice: This block does NOT have the same function as the block in the top level.
-        // The repositories here will be used for publishing your artifact, not for
-        // retrieving dependencies.
+    register<Copy>("buildAndCollect") {
+        group = "build"
+
+        val sourcesJar by existing
+        from(jar, sourcesJar)
+
+        into(rootProject.layout.buildDirectory.file("libs/${mod.version}"))
+        dependsOn("build")
     }
 }
+
+val currentCommitHash: String by lazy {
+    Runtime.getRuntime()
+        .exec(arrayOf("git", "rev-parse", "--verify", "--short", "HEAD"), null, rootDir)
+        .inputStream.bufferedReader().readText().trim()
+}
+
+blossom {
+    replaceToken("@MODID@", mod.id)
+    replaceToken("@VERSION@", mod.version)
+    replaceToken("@COMMIT_HASH@", currentCommitHash)
+}
+
+if (stonecutter.current.isActive) {
+    rootProject.tasks.register("buildActive") {
+        group = "project"
+        dependsOn(tasks.named("build"))
+    }
+}
+
+fun <T> optionalProp(property: String, block: (String) -> T?): T? =
+    findProperty(property)?.toString()?.takeUnless { it.isBlank() }?.let(block)

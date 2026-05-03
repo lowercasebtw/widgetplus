@@ -1,6 +1,7 @@
 package btw.lowercase.widgetplus.impl;
 
 import btw.lowercase.widgetplus.impl.entries.primitive.PrimitiveFunction;
+import btw.lowercase.widgetplus.impl.management.ItemBlockRenderer;
 import btw.lowercase.widgetplus.impl.util.Bounds;
 import btw.lowercase.widgetplus.impl.util.UV;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
@@ -10,24 +11,24 @@ import java.util.List;
 import java.util.Optional;
 
 public interface WidgetState {
-    record Multiple(List<WidgetState> states) implements WidgetState {
+    record Multiple(List<WidgetState> states, boolean inherit) implements WidgetState {
     }
 
     record Sprite(Identifier sprite, Optional<RenderPipeline> pipeline) implements WidgetState {
     }
 
-    record Texture(Identifier texture, Optional<RenderPipeline> pipeline, Optional<UV> uv) implements WidgetState {
+    record Texture(Identifier texture, Optional<RenderPipeline> pipeline, Optional<Bounds> bounds,
+                   Optional<UV> uv) implements WidgetState {
     }
 
     record Primitive(PrimitiveFunction function, Optional<RenderPipeline> pipeline,
                      Optional<Bounds> bounds) implements WidgetState {
     }
 
-    record Custom(WidgetState state, Optional<Bounds> bounds) implements WidgetState {
+    record Item(ItemBlockRenderer.Item item) implements WidgetState {
     }
 
-    // TODO: Implement usage
-    record Reference(Identifier id) implements WidgetState {
+    record Custom(WidgetState state, Optional<Bounds> bounds) implements WidgetState {
     }
 
     record Empty() implements WidgetState {

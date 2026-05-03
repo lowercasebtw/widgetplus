@@ -8,10 +8,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public final class WidgetPlus {
-    // TODO: Move these two out of here into the build script.
-    // -mineland 2026-04-26
-    public static final String MOD_ID = "widgetplus";
-    public static final String VERSION = "1.0";
+    public static final String MOD_ID = "@MODID@";
+    public static final String VERSION = "@VERSION@";
+    public static final String COMMIT_HASH = "@COMMIT_HASH@";
 
     public static Identifier id(final String path) {
         return Identifier.fromNamespaceAndPath(MOD_ID, path);

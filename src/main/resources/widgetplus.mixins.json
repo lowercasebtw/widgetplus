@@ -6,6 +6,7 @@
 		"MixinClientBootstrap",
 		"MixinFramerateLimitTracker_UncapUIFPS",
 		"MixinMinecraft",
+		"MixinMinecraft_ResetFrame",
 		"MixinRenderPipeline$Builder",
 		"MixinRenderSystem",
 		"components.AbstractSliderButtonAccessor",
@@ -18,7 +19,7 @@
 	"injectors": {
 		"defaultRequire": 1
 	},
-	"overwrites": {
-		"requireAnnotations": true
+	"mixinextras": {
+		"minVersion": "0.5.0"
 	}
 }

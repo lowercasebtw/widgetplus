@@ -9,7 +9,7 @@ import net.minecraft.util.ARGB;
 public class WidgetRenderContext {
     private final GuiGraphicsExtractor guiGraphicsExtractor;
     private RenderPipeline pipeline;
-    private Identifier location;
+    private final Identifier location;
     private int x;
     private int y;
     private int width;
@@ -77,16 +77,20 @@ public class WidgetRenderContext {
         return this.location;
     }
 
-    public void setLocation(final Identifier location) {
-        this.location = location;
-    }
-
     public int x() {
         return this.x;
     }
 
     public int y() {
         return this.y;
+    }
+
+    public int x1() {
+        return this.x + this.width;
+    }
+
+    public int y1() {
+        return this.y + this.height;
     }
 
     public int width() {
