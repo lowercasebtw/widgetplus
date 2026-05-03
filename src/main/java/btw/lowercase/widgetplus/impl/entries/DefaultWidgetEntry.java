@@ -1,5 +1,6 @@
 package btw.lowercase.widgetplus.impl.entries;
 
+import btw.lowercase.widgetplus.WidgetPlus;
 import btw.lowercase.widgetplus.impl.WidgetState;
 import btw.lowercase.widgetplus.impl.util.GuiPipelineOverrides;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
@@ -32,7 +33,7 @@ public record DefaultWidgetEntry(Optional<RenderPipeline> pipeline) implements W
         @Override
         public WidgetEntry bake() {
             final RenderPipeline.Builder builder = RenderPipeline.builder(RenderPipelines.GUI_TEXTURED_SNIPPET);
-            builder.withLocation("pipeline/dynamic_default_widget_" + this.hashCode());
+            builder.withLocation(WidgetPlus.id("pipeline/dynamic_default_widget_" + this.hashCode()));
             this.pipelineOverrides.ifPresent(overrides -> overrides.apply(builder));
             return new DefaultWidgetEntry(Optional.of(builder.build()));
         }

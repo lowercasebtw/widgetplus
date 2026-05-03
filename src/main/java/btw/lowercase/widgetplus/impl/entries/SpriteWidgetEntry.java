@@ -1,5 +1,6 @@
 package btw.lowercase.widgetplus.impl.entries;
 
+import btw.lowercase.widgetplus.WidgetPlus;
 import btw.lowercase.widgetplus.impl.WidgetState;
 import btw.lowercase.widgetplus.impl.util.GuiPipelineOverrides;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
@@ -36,7 +37,7 @@ public record SpriteWidgetEntry(Identifier sprite,
         @Override
         public WidgetEntry bake() {
             final RenderPipeline.Builder builder = RenderPipeline.builder(RenderPipelines.GUI_TEXTURED_SNIPPET);
-            builder.withLocation("pipeline/dynamic_sprite_widget_" + this.sprite.hashCode());
+            builder.withLocation(WidgetPlus.id("pipeline/dynamic_sprite_widget_" + this.sprite.hashCode()));
             this.pipelineOverrides.ifPresent(overrides -> overrides.apply(builder));
             return new SpriteWidgetEntry(this.sprite, Optional.of(builder.build()));
         }
