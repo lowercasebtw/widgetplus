@@ -40,7 +40,7 @@ public record PrimitiveWidgetEntry(PrimitiveFunction function, Optional<RenderPi
             RenderPipeline pipeline = null;
             if (pipelineOverrides.isPresent()) {
                 final RenderPipeline.Builder builder = RenderPipeline.builder(RenderPipelines.GUI_SNIPPET);
-                builder.withLocation("pipeline/dynamic_widget_" + this.function.hashCode());
+                builder.withLocation("pipeline/dynamic_primitive_widget_" + this.function.hashCode());
                 pipelineOverrides.ifPresent(overrides -> overrides.apply(builder));
                 pipeline = builder.build();
             }

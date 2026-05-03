@@ -36,7 +36,7 @@ public record SpriteWidgetEntry(Identifier sprite,
         @Override
         public WidgetEntry bake() {
             final RenderPipeline.Builder builder = RenderPipeline.builder(RenderPipelines.GUI_TEXTURED_SNIPPET);
-            builder.withLocation("pipeline/dynamic_widget_" + this.sprite.hashCode());
+            builder.withLocation("pipeline/dynamic_sprite_widget_" + this.sprite.hashCode());
             this.pipelineOverrides.ifPresent(overrides -> overrides.apply(builder));
             return new SpriteWidgetEntry(this.sprite, Optional.of(builder.build()));
         }
