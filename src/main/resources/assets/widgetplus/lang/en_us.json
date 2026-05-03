@@ -1,8 +1,17 @@
 {
 	"widgetplus.title": "WidgetPlus",
 	"widgetplus.category.main": "Main",
+	"widgetplus.group.packDev": "Resource pack development",
+	"widgetplus.group.packDev.description": "Options intended for development of resource packs with the mod.",
 	"widgetplus.enabled": "Enabled",
+	"widgetplus.enabled.description": "Enables or disables the mod.",
 	"widgetplus.uncapGuiFramerate": "Uncap GUI Framerate",
+	"widgetplus.uncapGuiFramerate.description": "Uncaps the Framerate on GUI screens.",
+	"widgetplus.showHashCode": "Show hash code",
+	"widgetplus.showHashCode.description": "Sets the tooltip of every widget to its hash code value.\nThis corresponds to §otarget.hash_code§r field in a widget definition json.",
+	"widgetplus.showScreenName": "Show screen name",
+	"widgetplus.showScreenName.description": "Shows the screen's class name on the top left of the screen.\n\nThis corresponds to the §oactive_screen§r value on §oselect§r type widget definition.\n\nNOTE: some widgets might obstruct other widget's tooltip! this includes some container widgets, like the config screen one you're in right now.",
+
 	"widgetplus.info.errorPlural": "%d WidgetPlus errors",
 	"widgetplus.info.errorSingular": "%d WidgetPlus error",
 	"widgetplus.info.checkLogs": "Check the logs for more information"

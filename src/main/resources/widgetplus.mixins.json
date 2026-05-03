@@ -9,6 +9,7 @@
 		"MixinMinecraft_ResetFrame",
 		"MixinRenderPipeline$Builder",
 		"MixinRenderSystem",
+		"MixinWidget_HashDev",
 		"components.AbstractSliderButtonAccessor",
 		"components.MixinAbstractButton",
 		"components.MixinAbstractScrollArea",
@@ -21,5 +22,8 @@
 	},
 	"mixinextras": {
 		"minVersion": "0.5.0"
-	}
+	},
+	"mixins": [
+		"MixinScreen_ResourcePackDev"
+	]
 }
