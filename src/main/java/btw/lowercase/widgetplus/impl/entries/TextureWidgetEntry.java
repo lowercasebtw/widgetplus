@@ -1,5 +1,6 @@
 package btw.lowercase.widgetplus.impl.entries;
 
+import btw.lowercase.widgetplus.WidgetPlus;
 import btw.lowercase.widgetplus.impl.WidgetState;
 import btw.lowercase.widgetplus.impl.util.Bounds;
 import btw.lowercase.widgetplus.impl.util.GuiPipelineOverrides;
@@ -45,7 +46,7 @@ public record TextureWidgetEntry(Identifier texture,
         public WidgetEntry bake() {
             final String path = this.texture.getPath();
             final RenderPipeline.Builder builder = RenderPipeline.builder(RenderPipelines.GUI_TEXTURED_SNIPPET);
-            builder.withLocation("pipeline/dynamic_texture_widget_" + this.texture.hashCode());
+            builder.withLocation(WidgetPlus.id("pipeline/dynamic_texture_widget_" + this.texture.hashCode()));
             this.pipelineOverrides.ifPresent(overrides -> overrides.apply(builder));
             return new TextureWidgetEntry(this.texture.withPath(path + ".png"), Optional.of(builder.build()), this.bounds, this.uv);
         }

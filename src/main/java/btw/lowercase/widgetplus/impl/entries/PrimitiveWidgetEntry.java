@@ -1,5 +1,6 @@
 package btw.lowercase.widgetplus.impl.entries;
 
+import btw.lowercase.widgetplus.WidgetPlus;
 import btw.lowercase.widgetplus.impl.WidgetState;
 import btw.lowercase.widgetplus.impl.entries.primitive.*;
 import btw.lowercase.widgetplus.impl.util.Bounds;
@@ -40,7 +41,7 @@ public record PrimitiveWidgetEntry(PrimitiveFunction function, Optional<RenderPi
             RenderPipeline pipeline = null;
             if (pipelineOverrides.isPresent()) {
                 final RenderPipeline.Builder builder = RenderPipeline.builder(RenderPipelines.GUI_SNIPPET);
-                builder.withLocation("pipeline/dynamic_primitive_widget_" + this.function.hashCode());
+                builder.withLocation(WidgetPlus.id("pipeline/dynamic_primitive_widget_" + this.function.hashCode()));
                 pipelineOverrides.ifPresent(overrides -> overrides.apply(builder));
                 pipeline = builder.build();
             }
@@ -49,16 +50,12 @@ public record PrimitiveWidgetEntry(PrimitiveFunction function, Optional<RenderPi
         }
 
         private Optional<GuiPipelineOverrides> extractPipelineOverrides(final PrimitiveFunction function) {
-            Optional<GuiPipelineOverrides> pipelineOverrides = Optional.empty();
-            if (function instanceof Fill fill) {
-                pipelineOverrides = fill.pipelineOverrides();
-            } else if (function instanceof FillGradient fillGradient) {
-                pipelineOverrides = fillGradient.pipelineOverrides();
-            } else if (function instanceof Outline outline) {
-                pipelineOverrides = outline.pipelineOverrides();
-            }
-
-            return pipelineOverrides;
+            return switch (function) {
+                case Fill fill -> fill.pipelineOverrides();
+                case FillGradient fillGradient -> fillGradient.pipelineOverrides();
+                case Outline outline -> outline.pipelineOverrides();
+                case null, default -> throw new RuntimeException("Unimplemented primitive type");
+            };
         }
     }
 }
