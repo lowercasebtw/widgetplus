@@ -32,7 +32,7 @@ public record DefaultWidgetEntry(Optional<RenderPipeline> pipeline) implements W
         @Override
         public WidgetEntry bake() {
             final RenderPipeline.Builder builder = RenderPipeline.builder(RenderPipelines.GUI_TEXTURED_SNIPPET);
-            builder.withLocation("pipeline/dynamic_widget_" + this.hashCode());
+            builder.withLocation("pipeline/dynamic_default_widget_" + this.hashCode());
             this.pipelineOverrides.ifPresent(overrides -> overrides.apply(builder));
             return new DefaultWidgetEntry(Optional.of(builder.build()));
         }

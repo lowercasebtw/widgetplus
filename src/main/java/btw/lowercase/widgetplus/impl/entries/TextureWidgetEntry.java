@@ -43,10 +43,11 @@ public record TextureWidgetEntry(Identifier texture,
 
         @Override
         public WidgetEntry bake() {
+            final String path = this.texture.getPath();
             final RenderPipeline.Builder builder = RenderPipeline.builder(RenderPipelines.GUI_TEXTURED_SNIPPET);
-            builder.withLocation("pipeline/dynamic_widget_" + this.texture.hashCode());
+            builder.withLocation("pipeline/dynamic_texture_widget_" + this.texture.hashCode());
             this.pipelineOverrides.ifPresent(overrides -> overrides.apply(builder));
-            return new TextureWidgetEntry(this.texture, Optional.of(builder.build()), this.bounds, this.uv);
+            return new TextureWidgetEntry(this.texture.withPath(path + ".png"), Optional.of(builder.build()), this.bounds, this.uv);
         }
     }
 }
