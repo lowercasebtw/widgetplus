@@ -11,8 +11,25 @@
 					"translate": "gui.done"
 				},
 				"widget": {
-					"type": "sprite",
-					"sprite": "widgetplus:widget/button_red"
+					"type": "composite",
+					"widgets": [
+						{
+							"type": "sprite",
+							"sprite": "widgetplus:widget/button_red"
+						},
+						{
+							"type": "item",
+							"item": {
+								"id": "minecraft:barrier",
+								"count": 4,
+								"components": {
+									"max_stack_size": 8,
+									"item_model": "stone",
+									"enchantment_glint_override": true
+								}
+							}
+						}
+					]
 				}
 			}
 		],

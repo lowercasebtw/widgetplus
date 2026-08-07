@@ -26,9 +26,9 @@ public abstract class MixinEditBox extends AbstractWidget {
     @WrapOperation(method = "extractWidgetRenderState", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;blitSprite(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIII)V"))
     private void widgetplus$blitEditBox(final GuiGraphicsExtractor instance, final RenderPipeline renderPipeline, final Identifier location, final int x, final int y, final int width, final int height, final Operation<Void> original) {
         final WidgetRenderContext widgetRenderContext = WidgetRenderContext.of(instance, renderPipeline, location, x, y, width, height);
-        final Consumer<WidgetRenderContext> defaultRender = (renderContext) -> original.call(renderContext.guiGraphics(), renderContext.pipeline(), renderContext.location(), renderContext.x(), renderContext.y(), renderContext.width(), renderContext.height());
+        final Consumer<WidgetRenderContext> defaultRender = (renderContext) -> original.call(renderContext.guiGraphics(), renderContext.pipeline(), renderContext.location(), renderContext.x0(), renderContext.y0(), renderContext.width(), renderContext.height());
         if (WidgetPlusConfig.instance().enabled) {
-            WidgetRenderer.renderDefinition(WidgetDefinition.Type.EDIT_BOX, this, widgetRenderContext, defaultRender);
+            WidgetRenderer.submitDefinition(WidgetDefinition.Type.EDIT_BOX, this, widgetRenderContext, defaultRender);
         } else {
             defaultRender.accept(widgetRenderContext);
         }

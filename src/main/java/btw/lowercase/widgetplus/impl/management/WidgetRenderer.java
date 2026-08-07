@@ -21,32 +21,31 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 public final class WidgetRenderer {
-    public static void renderDefinition(final WidgetDefinition.Type type, final AbstractWidget widget, final WidgetRenderContext renderContext, final Consumer<WidgetRenderContext> defaultRender) {
-        final WidgetState state = WidgetPlus.getWidgetManager().getState(type, widget);
-        renderState(state, renderContext, defaultRender);
+    public static void submitDefinition(final WidgetDefinition.Type type, final AbstractWidget widget, final WidgetRenderContext renderContext, final Consumer<WidgetRenderContext> defaultRender) {
+        submit(WidgetPlus.getWidgetManager().getState(type, widget), renderContext, defaultRender);
     }
 
-    public static void renderState(final WidgetState state, final WidgetRenderContext renderContext, final Consumer<WidgetRenderContext> defaultRender) {
+    public static void submit(final WidgetState state, final WidgetRenderContext renderContext, final Consumer<WidgetRenderContext> defaultRender) {
         if (state instanceof WidgetState.Multiple(List<WidgetState> states, boolean inherit)) {
-            final Bounds originalBounds = new Bounds(renderContext.x(), renderContext.y(), renderContext.width(), renderContext.height());
+            final Bounds originalBounds = new Bounds(renderContext.x0(), renderContext.y0(), renderContext.width(), renderContext.height());
             states.forEach(it -> {
                 if (!inherit) {
                     renderContext.setBounds(originalBounds);
                 }
 
-                renderState(it, renderContext, defaultRender);
+                submit(it, renderContext, defaultRender);
             });
         } else if (state instanceof WidgetState.Sprite(Identifier sprite, Optional<RenderPipeline> pipeline)) {
-            renderContext.guiGraphics().blitSprite(pipeline.orElse(renderContext.pipeline()), sprite, renderContext.x(), renderContext.y(), renderContext.width(), renderContext.height(), renderContext.color());
+            renderContext.guiGraphics().blitSprite(pipeline.orElse(renderContext.pipeline()), sprite, renderContext.x0(), renderContext.y0(), renderContext.width(), renderContext.height(), renderContext.color());
         } else if (state instanceof WidgetState.Texture texture) {
             renderTexture(texture, renderContext);
         } else if (state instanceof WidgetState.Primitive primitive) {
             renderPrimitive(primitive, renderContext);
-        } else if (state instanceof WidgetState.Item(ItemBlockRenderer.Item item)) {
-            ItemBlockRenderer.render(renderContext, item);
+        } else if (state instanceof WidgetState.Item(VisualItem item)) {
+            item.submit(renderContext);
         } else if (state instanceof WidgetState.Custom(WidgetState customState, Optional<Bounds> bounds)) {
             bounds.ifPresent(renderContext::setBounds);
-            renderState(customState, renderContext, defaultRender);
+            submit(customState, renderContext, defaultRender);
         } else if (state instanceof WidgetState.Default(Optional<RenderPipeline> pipeline)) {
             pipeline.ifPresent(renderContext::setPipeline);
             defaultRender.accept(renderContext);
@@ -59,9 +58,9 @@ public final class WidgetRenderer {
         renderContext.guiGraphics().innerBlit(
                 texture.pipeline().orElse(renderContext.pipeline()),
                 texture.texture(),
-                renderContext.x(),
+                renderContext.x0(),
                 renderContext.x1(),
-                renderContext.y(),
+                renderContext.y0(),
                 renderContext.y1(),
                 uv.u0(),
                 uv.u1(),
@@ -76,11 +75,11 @@ public final class WidgetRenderer {
         primitive.bounds().ifPresent(renderContext::setBounds);
         switch (primitive.function()) {
             case Fill fill ->
-                    renderContext.guiGraphics().fill(renderContext.pipeline(), renderContext.x(), renderContext.y(), renderContext.x() + renderContext.width(), renderContext.y() + renderContext.height(), fill.color());
+                    renderContext.guiGraphics().fill(renderContext.pipeline(), renderContext.x0(), renderContext.y0(), renderContext.x0() + renderContext.width(), renderContext.y0() + renderContext.height(), fill.color());
             case FillGradient fillGradient ->
-                    renderContext.guiGraphics().innerFill(renderContext.pipeline(), TextureSetup.noTexture(), renderContext.x(), renderContext.y(), renderContext.x() + renderContext.width(), renderContext.y() + renderContext.height(), fillGradient.startColor(), fillGradient.endColor());
+                    renderContext.guiGraphics().innerFill(renderContext.pipeline(), TextureSetup.noTexture(), renderContext.x0(), renderContext.y0(), renderContext.x0() + renderContext.width(), renderContext.y0() + renderContext.height(), fillGradient.startColor(), fillGradient.endColor());
             case Outline outline ->
-                    outline(renderContext.guiGraphics(), renderContext.pipeline(), renderContext.x(), renderContext.y(), renderContext.width(), renderContext.height(), outline.color(), outline.lineWidth());
+                    outline(renderContext.guiGraphics(), renderContext.pipeline(), renderContext.x0(), renderContext.y0(), renderContext.width(), renderContext.height(), outline.color(), outline.lineWidth());
             case null, default ->
                     throw new RuntimeException("TODO: Implement primitive rendering for type: " + primitive.function());
         }

@@ -10,8 +10,8 @@ public class WidgetRenderContext {
     private final GuiGraphicsExtractor guiGraphicsExtractor;
     private RenderPipeline pipeline;
     private final Identifier location;
-    private int x;
-    private int y;
+    private int x0;
+    private int y0;
     private int width;
     private int height;
     private final int color;
@@ -20,8 +20,8 @@ public class WidgetRenderContext {
             final GuiGraphicsExtractor guiGraphicsExtractor,
             final RenderPipeline pipeline,
             final Identifier location,
-            final int x,
-            final int y,
+            final int x0,
+            final int y0,
             final int width,
             final int height,
             final int color
@@ -29,8 +29,8 @@ public class WidgetRenderContext {
         this.guiGraphicsExtractor = guiGraphicsExtractor;
         this.pipeline = pipeline;
         this.location = location;
-        this.x = x;
-        this.y = y;
+        this.x0 = x0;
+        this.y0 = y0;
         this.width = width;
         this.height = height;
         this.color = color;
@@ -77,20 +77,20 @@ public class WidgetRenderContext {
         return this.location;
     }
 
-    public int x() {
-        return this.x;
+    public int x0() {
+        return this.x0;
     }
 
-    public int y() {
-        return this.y;
+    public int y0() {
+        return this.y0;
     }
 
     public int x1() {
-        return this.x + this.width;
+        return this.x0 + this.width;
     }
 
     public int y1() {
-        return this.y + this.height;
+        return this.y0 + this.height;
     }
 
     public int width() {
@@ -102,8 +102,8 @@ public class WidgetRenderContext {
     }
 
     public void setBounds(final Bounds bounds) {
-        this.x = bounds.getX(this.x);
-        this.y = bounds.getY(this.y);
+        this.x0 = bounds.getX(this.x0);
+        this.y0 = bounds.getY(this.y0);
         this.width = bounds.width().orElse(this.width);
         this.height = bounds.height().orElse(this.height);
     }
